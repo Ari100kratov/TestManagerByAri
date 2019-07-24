@@ -20,6 +20,16 @@ namespace DataAccessLayer
             this.tableName = typeof(T).Name;
         }
 
+        internal virtual List<T> GetList()
+        {
+            return this.listOfEntities;
+        }
+
+        internal virtual T GetItem(int id)
+        {
+            return this.listOfEntities.First(x=>x.Id == id);
+        }
+
         private void FillList()
         {
             var da = new SqlDataAdapter($"SELECT * FROM [{this.tableName}]", Properties.Settings.Default.ConnectionString);
@@ -46,7 +56,7 @@ namespace DataAccessLayer
             }
         }
 
-        public virtual int Add(T item)
+        internal virtual int Add(T item)
         {
             var insertQuery = $"INSERT INTO [{this.tableName}](";
             var valuesQuery = $" VALUES (";
@@ -94,7 +104,7 @@ namespace DataAccessLayer
             return lastId;
         }
 
-        public virtual void Delete(int id)
+        internal virtual void Delete(int id)
         {
             var cmd = new SqlCommand($"DELETE FROM {this.tableName} WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", id);
@@ -106,7 +116,7 @@ namespace DataAccessLayer
                 this.listOfEntities.Remove(foundItem);
         }
 
-        public virtual void Delete(T item)
+        internal virtual void Delete(T item)
         {
             var cmd = new SqlCommand($"DELETE FROM [{this.tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", item.Id);
@@ -118,7 +128,7 @@ namespace DataAccessLayer
                 this.listOfEntities.Remove(foundItem);
         }
 
-        public virtual void Update(T item)
+        internal virtual void Update(T item)
         {
             var updateQuery = $"UPDATE [{this.tableName}] SET ";
             var fieldList = new List<string>();

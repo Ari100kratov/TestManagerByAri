@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAcce
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMAttributes", "TMAttributes\TMAttributes.csproj", "{D7C701D7-F3B7-4D86-BD4B-5A36C529CE9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMWcfService", "TMWcfService\TMWcfService.csproj", "{9B638896-CF93-4136-A521-4621C73831D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D7C701D7-F3B7-4D86-BD4B-5A36C529CE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7C701D7-F3B7-4D86-BD4B-5A36C529CE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7C701D7-F3B7-4D86-BD4B-5A36C529CE9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B638896-CF93-4136-A521-4621C73831D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B638896-CF93-4136-A521-4621C73831D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B638896-CF93-4136-A521-4621C73831D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B638896-CF93-4136-A521-4621C73831D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

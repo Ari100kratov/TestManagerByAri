@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLayer.Repositories;
 
 namespace DataAccessLayer
 {
     internal sealed class DataManager
     {
+        internal WorkerRepository Worker { get; } = new WorkerRepository();
+        internal DepartmentRepository Department { get; } = new DepartmentRepository();
+
         private static DataManager _active = null;
         private static object _syncRoot = new object();
 
