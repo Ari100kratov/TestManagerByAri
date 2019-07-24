@@ -1,16 +1,12 @@
 ﻿using DataAccessLayer.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using TMAttributes;
 
 namespace DataAccessLayer.Entities
 {
     [DataContract]
-    public sealed partial class Worker : IKeyedModel
+    public partial class Worker : IKeyedModel
     {
         private DataManager Dm => DataManager.Instance;
 

@@ -9,9 +9,6 @@ namespace TMWcfService
 {
     internal class Service : IService
     {
-        public void TestMethod()
-        {
-            throw new NotImplementedException();
-        }
+        private DataManager Dm => DataManager.Instance;
     }
 }

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
+using DataAccessLayer;
 
 namespace TMWcfService
 {
     [ServiceContract]
     internal interface IService
     {
-        [OperationContract]
-        void TestMethod();
+
     }
 }

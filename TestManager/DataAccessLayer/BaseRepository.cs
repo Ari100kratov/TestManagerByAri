@@ -98,7 +98,7 @@ namespace DataAccessLayer
             }
 
             //Получаем и сохраняем ID добавленной записи
-            int lastId = (int)this.SaveChanges(cmd);
+            int lastId = Convert.ToInt32(this.SaveChanges(cmd));
             item.Id = lastId;
             this.listOfEntities.Add(item);
             return lastId;
