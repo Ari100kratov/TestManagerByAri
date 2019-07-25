@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TestManagerClient.WcfServiceReference;
 
 
 namespace TestManagerClient
 {
-
-
     static class Program
     {
-        //public static ServiceClient Service = new ServiceClient();
+        internal static ServiceClient TMWcfService = new ServiceClient();
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>

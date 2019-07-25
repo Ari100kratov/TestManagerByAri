@@ -49,10 +49,12 @@
             // 
             this.tvDepartments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.tvDepartments.HideSelection = false;
             this.tvDepartments.Location = new System.Drawing.Point(12, 12);
             this.tvDepartments.Name = "tvDepartments";
             this.tvDepartments.Size = new System.Drawing.Size(237, 305);
             this.tvDepartments.TabIndex = 0;
+            this.tvDepartments.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDepartments_AfterSelect);
             // 
             // panel
             // 
@@ -70,6 +72,7 @@
             // 
             // btnAddWorker
             // 
+            this.btnAddWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddWorker.Location = new System.Drawing.Point(538, 14);
             this.btnAddWorker.Name = "btnAddWorker";
             this.btnAddWorker.Size = new System.Drawing.Size(75, 23);
@@ -80,48 +83,58 @@
             // 
             // btnEditWorker
             // 
+            this.btnEditWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEditWorker.Location = new System.Drawing.Point(619, 14);
             this.btnEditWorker.Name = "btnEditWorker";
             this.btnEditWorker.Size = new System.Drawing.Size(75, 23);
             this.btnEditWorker.TabIndex = 0;
             this.btnEditWorker.Text = "Edit";
             this.btnEditWorker.UseVisualStyleBackColor = true;
+            this.btnEditWorker.Click += new System.EventHandler(this.btnEditWorker_Click);
             // 
             // btnDeleteWorker
             // 
+            this.btnDeleteWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDeleteWorker.Location = new System.Drawing.Point(700, 14);
             this.btnDeleteWorker.Name = "btnDeleteWorker";
             this.btnDeleteWorker.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteWorker.TabIndex = 0;
             this.btnDeleteWorker.Text = "Delete";
             this.btnDeleteWorker.UseVisualStyleBackColor = true;
+            this.btnDeleteWorker.Click += new System.EventHandler(this.btnDeleteWorker_Click);
             // 
             // btnDeleteDepartment
             // 
+            this.btnDeleteDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDeleteDepartment.Location = new System.Drawing.Point(174, 14);
             this.btnDeleteDepartment.Name = "btnDeleteDepartment";
             this.btnDeleteDepartment.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteDepartment.TabIndex = 0;
             this.btnDeleteDepartment.Text = "Delete";
             this.btnDeleteDepartment.UseVisualStyleBackColor = true;
+            this.btnDeleteDepartment.Click += new System.EventHandler(this.btnDeleteDepartment_Click);
             // 
             // btnEditDepartment
             // 
+            this.btnEditDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnEditDepartment.Location = new System.Drawing.Point(93, 14);
             this.btnEditDepartment.Name = "btnEditDepartment";
             this.btnEditDepartment.Size = new System.Drawing.Size(75, 23);
             this.btnEditDepartment.TabIndex = 0;
             this.btnEditDepartment.Text = "Edit";
             this.btnEditDepartment.UseVisualStyleBackColor = true;
+            this.btnEditDepartment.Click += new System.EventHandler(this.btnEditDepartment_Click);
             // 
             // btnAddDepartment
             // 
+            this.btnAddDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAddDepartment.Location = new System.Drawing.Point(12, 14);
             this.btnAddDepartment.Name = "btnAddDepartment";
             this.btnAddDepartment.Size = new System.Drawing.Size(75, 23);
             this.btnAddDepartment.TabIndex = 0;
             this.btnAddDepartment.Text = "Add";
             this.btnAddDepartment.UseVisualStyleBackColor = true;
+            this.btnAddDepartment.Click += new System.EventHandler(this.btnAddDepartment_Click);
             // 
             // dgvWorkers
             // 
@@ -185,6 +198,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Manager";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvWorkers)).EndInit();
             this.ResumeLayout(false);
