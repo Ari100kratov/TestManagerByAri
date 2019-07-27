@@ -80,6 +80,7 @@
             // 
             this.cbParentDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbParentDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbParentDepartment.FormattingEnabled = true;
             this.cbParentDepartment.Location = new System.Drawing.Point(112, 61);
             this.cbParentDepartment.Name = "cbParentDepartment";

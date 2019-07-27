@@ -18,6 +18,7 @@ namespace DataAccessLayer
         public BaseRepository()
         {
             this.tableName = typeof(T).Name;
+            this.FillList();
         }
 
         internal virtual List<T> GetList()

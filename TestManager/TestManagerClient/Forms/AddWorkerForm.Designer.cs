@@ -69,7 +69,7 @@
             this.tbLastName.MaxLength = 30;
             this.tbLastName.Name = "tbLastName";
             this.tbLastName.Size = new System.Drawing.Size(294, 20);
-            this.tbLastName.TabIndex = 0;
+            this.tbLastName.TabIndex = 1;
             // 
             // lblLastName
             // 
@@ -130,6 +130,7 @@
             // 
             this.cbDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDepartment.FormattingEnabled = true;
             this.cbDepartment.Location = new System.Drawing.Point(97, 116);
             this.cbDepartment.Name = "cbDepartment";
@@ -143,10 +144,9 @@
             this.btnCancel.Location = new System.Drawing.Point(316, 143);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 

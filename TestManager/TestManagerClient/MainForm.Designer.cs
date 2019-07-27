@@ -162,28 +162,28 @@
             // colFirstName
             // 
             this.colFirstName.DataPropertyName = "FirstName";
-            this.colFirstName.HeaderText = "Имя";
+            this.colFirstName.HeaderText = "First Name";
             this.colFirstName.Name = "colFirstName";
             this.colFirstName.ReadOnly = true;
             // 
             // colLastName
             // 
             this.colLastName.DataPropertyName = "LastName";
-            this.colLastName.HeaderText = "Фамилия";
+            this.colLastName.HeaderText = "Last Name";
             this.colLastName.Name = "colLastName";
             this.colLastName.ReadOnly = true;
             // 
             // colAge
             // 
             this.colAge.DataPropertyName = "Age";
-            this.colAge.HeaderText = "Возраст";
+            this.colAge.HeaderText = "Age";
             this.colAge.Name = "colAge";
             this.colAge.ReadOnly = true;
             // 
             // colPhoneNumber
             // 
             this.colPhoneNumber.DataPropertyName = "PhoneNumber";
-            this.colPhoneNumber.HeaderText = "Телефон";
+            this.colPhoneNumber.HeaderText = "Phone number";
             this.colPhoneNumber.Name = "colPhoneNumber";
             this.colPhoneNumber.ReadOnly = true;
             // 

@@ -11,34 +11,14 @@ using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.Forms
 {
-    public partial class AddWorkerForm : Form
+    public partial class EditWorkerForm : Form
     {
-        private Department Department = new Department();
-        private MainForm MainForm = null;
+        private Worker Worker = null;
 
-        public AddWorkerForm(MainForm mainForm, Department department = null)
+        public EditWorkerForm(Worker worker)
         {
             InitializeComponent();
-            this.Department = department;
-            this.MainForm = mainForm;
-        }
-
-        private void AddWorkerForm_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                this.cbDepartment.ValueMember = "Id";
-                this.cbDepartment.DisplayMember = "NameDepartment";
-                this.cbDepartment.DataSource = Program.TMWcfService.GetAllDepartments().ToList();
-                this.cbDepartment.SelectedIndex = 0;
-
-                if (this.Department != null)
-                    this.cbDepartment.SelectedItem = this.Department;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            this.Worker = worker;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -71,18 +51,34 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                var worker = new Worker
-                {
-                    FirstName = this.tbFirstName.Text,
-                    LastName = this.tbLastName.Text,
-                    DateOfBirth = this.dtpDateOfBirth.Value.Date,
-                    PhoneNumber = this.mtbPhoneNumber.Text,
-                    DepartmentId = (int)this.cbDepartment.SelectedValue
-                };
+                this.Worker.FirstName = this.tbFirstName.Text;
+                this.Worker.LastName = this.tbLastName.Text;
+                this.Worker.DateOfBirth = this.dtpDateOfBirth.Value.Date;
+                this.Worker.PhoneNumber = this.mtbPhoneNumber.Text;
+                this.Worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
 
-                worker.Id = Program.TMWcfService.AddNewWorker(worker);
-                this.MainForm.AddedWorker = worker;
+                Program.TMWcfService.EditWorker(this.Worker);
                 this.DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void EditWorkerForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                this.cbDepartment.ValueMember = "Id";
+                this.cbDepartment.DisplayMember = "NameDepartment";
+                this.cbDepartment.DataSource = Program.TMWcfService.GetAllDepartments().ToList();
+
+                this.tbFirstName.Text = this.Worker.FirstName;
+                this.tbLastName.Text = this.Worker.LastName;
+                this.dtpDateOfBirth.Value = this.Worker.DateOfBirth;
+                this.mtbPhoneNumber.Text = this.Worker.PhoneNumber;
+                this.cbDepartment.SelectedValue = this.Worker.DepartmentId;
             }
             catch (Exception ex)
             {

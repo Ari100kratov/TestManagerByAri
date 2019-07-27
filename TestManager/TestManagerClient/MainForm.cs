@@ -14,47 +14,53 @@ namespace TestManagerClient
 {
     public partial class MainForm : Form
     {
-        private List<Worker> WorkerList = new List<Worker>();
+        private BindingList<Worker> WorkerBindingList = new BindingList<Worker>();
         private List<Department> DepartmentList = new List<Department>();
-        private Department SelectedDepartment = null;
+        internal Worker AddedWorker = null;
+        internal Department AddedDepartment = null;
 
         public MainForm()
         {
             InitializeComponent();
             this.dgvWorkers.AutoGenerateColumns = false;
-            this.FillTvlDepartments();
         }
 
         private void FillTreeView(TreeNode parentNode = null)
         {
             if (parentNode == null)
             {
-                parentNode = new TreeNode();
-                parentNode.Text = "Departments";
-                parentNode.Tag = null;
+                parentNode = new TreeNode
+                {
+                    Text = "Departments",
+                    Tag = null,
+                    Name = "0"
+                };
+
                 var parentDepartments = this.DepartmentList.Where(t => t.ParentId == 0).ToList();
                 foreach (var department in parentDepartments)
                 {
                     var node = new TreeNode()
                     {
                         Text = department.NameDepartment,
-                        Tag = department.Id,
+                        Tag = department,
+                        Name = department.Id.ToString()
                     };
                     FillTreeView(node);
                     parentNode.Nodes.Add(node);
-                    this.tvDepartments.Nodes.Add(parentNode);
                 }
+                this.tvDepartments.Nodes.Add(parentNode);
             }
             else
             {
-                var id = (int)parentNode.Tag;
+                var id = (parentNode.Tag as Department).Id;
                 var childDepartments = this.DepartmentList.Where(t => t.ParentId == id).ToList();
                 foreach (var department in childDepartments)
                 {
                     var node = new TreeNode()
                     {
                         Text = department.NameDepartment,
-                        Tag = department.Id,
+                        Tag = department,
+                        Name = department.Id.ToString()
                     };
                     this.FillTreeView(node);
                     parentNode.Nodes.Add(node);
@@ -64,46 +70,42 @@ namespace TestManagerClient
             this.tvDepartments.ExpandAll();
         }
 
-        private void FillDgvWorkers()
-        {
-            this.WorkerList = Program.TMWcfService.GetAllWorkers().ToList();
-            this.dgvWorkers.DataSource = null;
-
-            if (this.SelectedDepartment != null)
-                this.dgvWorkers.DataSource = this.WorkerList.Where(x => x.DepartmentId == this.SelectedDepartment.Id).ToList();
-            else
-                this.dgvWorkers.DataSource = this.WorkerList;
-        }
-
-        private void FillTvlDepartments()
-        {
-            this.tvDepartments.Nodes.Clear();
-            this.SelectedDepartment = null;
-            this.DepartmentList = Program.TMWcfService.GetAllDepartments().ToList();
-            this.FillTreeView();
-            this.FillDgvWorkers();
-        }
-
-        private void btnAddWorker_Click(object sender, EventArgs e)
-        {
-            var addNewWorker = new AddWorkerForm(this.SelectedDepartment);
-            if (addNewWorker.ShowDialog() == DialogResult.OK)
-                this.FillDgvWorkers();
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
+            this.DepartmentList = Program.TMWcfService.GetAllDepartments().ToList();
+            this.FillTreeView();
         }
 
         private void btnAddDepartment_Click(object sender, EventArgs e)
         {
-            var addNewDepatment = new AddDepartmentForm();
-            if (addNewDepatment.ShowDialog() == DialogResult.OK)
-            {
-                MessageBox.Show("Hi");
-            }
+            var addDepartmentForm = new AddDepartmentForm(this);
 
+            if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            if (this.AddedDepartment.ParentId == 0)
+            {
+                var parentNode = new TreeNode
+                {
+                    Text = this.AddedDepartment.NameDepartment,
+                    Tag = this.AddedDepartment,
+                    Name = this.AddedDepartment.Id.ToString()
+                };
+                this.tvDepartments.Nodes.Add(parentNode);
+            }
+            else
+            {
+                var parentNode = this.tvDepartments.Nodes.Find(this.AddedDepartment.ParentId.ToString(), true).First();
+                var childNode = new TreeNode
+                {
+                    Text = this.AddedDepartment.NameDepartment,
+                    Tag = this.AddedDepartment,
+                    Name = this.AddedDepartment.Id.ToString()
+                };
+                parentNode.Nodes.Add(childNode);
+                parentNode.Expand();
+            }
         }
 
         private void btnEditDepartment_Click(object sender, EventArgs e)
@@ -116,27 +118,76 @@ namespace TestManagerClient
 
         }
 
+        private void btnAddWorker_Click(object sender, EventArgs e)
+        {
+            var addWorkerForm = new AddWorkerForm(this);
+
+            if (addWorkerForm.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            this.WorkerBindingList.Add(this.AddedWorker);
+            this.AddedWorker = null;
+
+        }
+
         private void btnEditWorker_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var selectedWorker = this.dgvWorkers.CurrentRow.DataBoundItem as Worker;
 
+                if (selectedWorker == null)
+                {
+                    MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var editWorkerForm = new EditWorkerForm(selectedWorker);
+                if (editWorkerForm.ShowDialog() == DialogResult.OK)
+                    this.dgvWorkers.DataSource = new BindingList<Worker>(this.WorkerBindingList.Where
+                        (x => x.DepartmentId == (this.tvDepartments.SelectedNode.Tag as Department).Id).ToList());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnDeleteWorker_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var selectedWorker = this.dgvWorkers.CurrentRow.DataBoundItem as Worker;
 
+                if (selectedWorker == null)
+                {
+                    MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (MessageBox.Show("Do you really want to delete the selected record?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    return;
+
+                Program.TMWcfService.DeleteWorker(selectedWorker.Id);
+                this.WorkerBindingList.Remove(selectedWorker);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void tvDepartments_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (this.tvDepartments.SelectedNode.Tag != null)
+            if (this.tvDepartments.SelectedNode == null || this.tvDepartments.SelectedNode.Tag == null)
             {
-                this.SelectedDepartment = this.DepartmentList.First(x => x.Id == (int)this.tvDepartments.SelectedNode.Tag);
-                this.FillDgvWorkers();
+                // this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
+                this.dgvWorkers.DataSource = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
             }
             else
             {
-                this.SelectedDepartment = null;
-                this.FillDgvWorkers();
+                //this.WorkerBindingList = new BindingList<Worker>(this.WorkerBindingList.Where(x => x.DepartmentId == (int)this.tvDepartments.SelectedNode.Tag).ToList());
+                this.dgvWorkers.DataSource = new BindingList<Worker>(this.WorkerBindingList.Where(x => x.DepartmentId == (this.tvDepartments.SelectedNode.Tag as Department).Id).ToList());
             }
         }
     }

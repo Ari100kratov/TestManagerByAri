@@ -13,19 +13,27 @@ namespace TestManagerClient.Forms
 {
     public partial class AddDepartmentForm : Form
     {
-        public AddDepartmentForm()
+        private MainForm MainForm = null;
+
+        public AddDepartmentForm(MainForm mainForm)
         {
             InitializeComponent();
+            this.MainForm = mainForm;
         }
 
         private void AddDepartmentForm_Load(object sender, EventArgs e)
         {
-            if (Program.TMWcfService.GetAllDepartments().Count() == 0)
-                return;
+            var departmentList = Program.TMWcfService.GetAllDepartments().ToList();
+
+            if (departmentList.Count() == 0)
+            {
+                this.checkboxUpper.Checked = true;
+                this.checkboxUpper.Enabled = false;
+            }
 
             this.cbParentDepartment.ValueMember = "Id";
             this.cbParentDepartment.DisplayMember = "NameDepartment";
-            this.cbParentDepartment.DataSource = Program.TMWcfService.GetAllDepartments().ToList();
+            this.cbParentDepartment.DataSource = departmentList;
             this.cbParentDepartment.SelectedIndex = 0;
         }
 
@@ -60,7 +68,8 @@ namespace TestManagerClient.Forms
                 ParentId = parentId
             };
 
-            Program.TMWcfService.AddNewDepartment(department);
+            department.Id = Program.TMWcfService.AddNewDepartment(department);
+            this.MainForm.AddedDepartment = department;
 
         }
     }
