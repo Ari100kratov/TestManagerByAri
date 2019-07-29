@@ -16,6 +16,7 @@ namespace TestManagerClient
     {
         private BindingList<Worker> WorkerBindingList = new BindingList<Worker>();
         private List<Department> DepartmentList = new List<Department>();
+        private TreeNode SelectedNode = null;
         internal Worker AddedWorker = null;
         internal Department AddedDepartment = null;
 
@@ -25,6 +26,31 @@ namespace TestManagerClient
             this.dgvWorkers.AutoGenerateColumns = false;
         }
 
+        /// <summary>
+        /// Получение всех сотрудников выбранного подразделения и его дочерних подразделений
+        /// </summary>
+        /// <returns></returns>
+        private List<Worker> GetListWorkerInDepartment()
+        {
+            //Преобразуем последовательность узлов в список Name полученных узлов дерева
+            var nameList = GetChildrens(this.tvDepartments.SelectedNode).Select(x => x.Name).ToList();
+            //Добавляем в этот список Name выбранного узла
+            nameList.Add(this.tvDepartments.SelectedNode.Name);
+
+            return this.WorkerBindingList.Where(x => nameList.Contains(x.DepartmentId.ToString())).ToList();
+
+            //Получаем последовательность дочерних узлов
+            IEnumerable<TreeNode> GetChildrens(TreeNode Parent)
+            {
+                return Parent.Nodes.Cast<TreeNode>().Concat(
+                      Parent.Nodes.Cast<TreeNode>().SelectMany(GetChildrens));
+            }
+        }
+
+        /// <summary>
+        /// Рекурсивное заполнение дерева подразделений
+        /// </summary>
+        /// <param name="parentNode">Родительский узел дерева</param>
         private void FillTreeView(TreeNode parentNode = null)
         {
             if (parentNode == null)
@@ -70,82 +96,172 @@ namespace TestManagerClient
             this.tvDepartments.ExpandAll();
         }
 
+        private void RefreshDgvWorkers()
+        {
+            if (this.SelectedNode == null || this.SelectedNode.Tag == null)
+                this.dgvWorkers.DataSource = this.WorkerBindingList;
+            else
+                this.dgvWorkers.DataSource = new BindingList<Worker>(this.GetListWorkerInDepartment());
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
-            this.DepartmentList = Program.TMWcfService.GetAllDepartments().ToList();
-            this.FillTreeView();
+            try
+            {
+                this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
+                this.DepartmentList = Program.TMWcfService.GetAllDepartments().ToList();
+                this.FillTreeView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnAddDepartment_Click(object sender, EventArgs e)
         {
-            var addDepartmentForm = new AddDepartmentForm(this);
-
-            if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
-                return;
-
-            if (this.AddedDepartment.ParentId == 0)
+            try
             {
-                var parentNode = new TreeNode
+                var addDepartmentForm = new AddDepartmentForm(this, this.SelectedNode.Tag as Department);
+
+                if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
+                    return;
+
+                //Если корневой узел
+                if (this.AddedDepartment.ParentId == 0)
                 {
-                    Text = this.AddedDepartment.NameDepartment,
-                    Tag = this.AddedDepartment,
-                    Name = this.AddedDepartment.Id.ToString()
-                };
-                this.tvDepartments.Nodes.Add(parentNode);
+                    var parentNode = new TreeNode
+                    {
+                        Text = this.AddedDepartment.NameDepartment,
+                        Tag = this.AddedDepartment,
+                        Name = this.AddedDepartment.Id.ToString()
+                    };
+                    this.tvDepartments.Nodes[0].Nodes.Add(parentNode);
+                }
+                //Если дочерний узел
+                else
+                {
+                    var parentNode = this.tvDepartments.Nodes.Find(this.AddedDepartment.ParentId.ToString(), true).First();
+                    var childNode = new TreeNode
+                    {
+                        Text = this.AddedDepartment.NameDepartment,
+                        Tag = this.AddedDepartment,
+                        Name = this.AddedDepartment.Id.ToString()
+                    };
+                    parentNode.Nodes.Add(childNode);
+                    parentNode.Expand();
+                }
+
+                this.AddedDepartment = null;
             }
-            else
+            catch (Exception ex)
             {
-                var parentNode = this.tvDepartments.Nodes.Find(this.AddedDepartment.ParentId.ToString(), true).First();
-                var childNode = new TreeNode
-                {
-                    Text = this.AddedDepartment.NameDepartment,
-                    Tag = this.AddedDepartment,
-                    Name = this.AddedDepartment.Id.ToString()
-                };
-                parentNode.Nodes.Add(childNode);
-                parentNode.Expand();
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnEditDepartment_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (this.SelectedNode == null || this.SelectedNode.Tag == null)
+                {
+                    MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                //Создаем, чтобы получить изменения по ссылке
+                var selectedDepartment = this.SelectedNode.Tag as Department;
+
+                var editDepartmentForm = new EditDepartmentForm(selectedDepartment);
+                if (editDepartmentForm.ShowDialog() == DialogResult.Cancel)
+                    return;
+
+                //Создаем копию устаревшего узла со всеми дочерними элементами
+                var changingNode = (TreeNode)this.SelectedNode.Clone();
+                //Удаляем устаревший узел
+                this.tvDepartments.SelectedNode.Remove();
+
+                //Присваиваем новому узлу актуальные данные
+                changingNode.Tag = selectedDepartment;
+                changingNode.Text = selectedDepartment.NameDepartment;
+
+
+                if (selectedDepartment.ParentId == 0)
+                    this.tvDepartments.Nodes[0].Nodes.Add(changingNode);
+                else
+                {
+                    //Находим необходимый родительский узел для нового и добавляем в него актуальную ветку
+                    var parentNode = this.tvDepartments.Nodes.Find(selectedDepartment.ParentId.ToString(), true).First();
+                    parentNode.Nodes.Add(changingNode);
+                }
+
+                this.tvDepartments.SelectedNode = changingNode;
+                this.tvDepartments.ExpandAll();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnDeleteDepartment_Click(object sender, EventArgs e)
         {
+            if (this.SelectedNode == null || this.SelectedNode.Tag == null)
+            {
+                MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            if (MessageBox.Show("Are you sure you want to delete the selected and all dependent departments?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            //Удаляем сотрудников в выбранном и дочерних подразделениях
+            foreach (var worker in this.GetListWorkerInDepartment())
+                this.WorkerBindingList.Remove(worker);
+
+            Program.TMWcfService.DeleteDepartment((this.SelectedNode.Tag as Department).Id);
+            this.tvDepartments.SelectedNode.Remove();
         }
 
         private void btnAddWorker_Click(object sender, EventArgs e)
         {
-            var addWorkerForm = new AddWorkerForm(this);
+            try
+            {
+                if (Program.TMWcfService.GetAllDepartments().Count() == 0)
+                    return;
 
-            if (addWorkerForm.ShowDialog() == DialogResult.Cancel)
-                return;
+                var addWorkerForm = new AddWorkerForm(this, this.SelectedNode.Tag as Department);
 
-            this.WorkerBindingList.Add(this.AddedWorker);
-            this.AddedWorker = null;
+                if (addWorkerForm.ShowDialog() == DialogResult.Cancel)
+                    return;
 
+                this.WorkerBindingList.Add(this.AddedWorker);
+                this.AddedWorker = null;
+                this.RefreshDgvWorkers();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnEditWorker_Click(object sender, EventArgs e)
         {
             try
             {
-                var selectedWorker = this.dgvWorkers.CurrentRow.DataBoundItem as Worker;
-
-                if (selectedWorker == null)
+                if (this.dgvWorkers.Rows.Count == 0 || !(this.dgvWorkers.CurrentRow.DataBoundItem is Worker selectedWorker))
                 {
                     MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 var editWorkerForm = new EditWorkerForm(selectedWorker);
-                if (editWorkerForm.ShowDialog() == DialogResult.OK)
-                    this.dgvWorkers.DataSource = new BindingList<Worker>(this.WorkerBindingList.Where
-                        (x => x.DepartmentId == (this.tvDepartments.SelectedNode.Tag as Department).Id).ToList());
+                if (editWorkerForm.ShowDialog() == DialogResult.Cancel)
+                    return;
+
+                this.RefreshDgvWorkers();
+
             }
             catch (Exception ex)
             {
@@ -157,9 +273,8 @@ namespace TestManagerClient
         {
             try
             {
-                var selectedWorker = this.dgvWorkers.CurrentRow.DataBoundItem as Worker;
 
-                if (selectedWorker == null)
+                if (this.dgvWorkers.Rows.Count == 0 || !(this.dgvWorkers.CurrentRow.DataBoundItem is Worker selectedWorker))
                 {
                     MessageBox.Show("No record selected", "Empty", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -170,6 +285,7 @@ namespace TestManagerClient
 
                 Program.TMWcfService.DeleteWorker(selectedWorker.Id);
                 this.WorkerBindingList.Remove(selectedWorker);
+                this.RefreshDgvWorkers();
             }
             catch (Exception ex)
             {
@@ -179,15 +295,14 @@ namespace TestManagerClient
 
         private void tvDepartments_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (this.tvDepartments.SelectedNode == null || this.tvDepartments.SelectedNode.Tag == null)
+            try
             {
-                // this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
-                this.dgvWorkers.DataSource = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
+                this.SelectedNode = this.tvDepartments.SelectedNode;
+                this.RefreshDgvWorkers();
             }
-            else
+            catch (Exception ex)
             {
-                //this.WorkerBindingList = new BindingList<Worker>(this.WorkerBindingList.Where(x => x.DepartmentId == (int)this.tvDepartments.SelectedNode.Tag).ToList());
-                this.dgvWorkers.DataSource = new BindingList<Worker>(this.WorkerBindingList.Where(x => x.DepartmentId == (this.tvDepartments.SelectedNode.Tag as Department).Id).ToList());
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

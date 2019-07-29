@@ -33,7 +33,7 @@ namespace TestManagerClient.Forms
                 this.cbDepartment.SelectedIndex = 0;
 
                 if (this.Department != null)
-                    this.cbDepartment.SelectedItem = this.Department;
+                    this.cbDepartment.SelectedValue = this.Department.Id;
             }
             catch (Exception ex)
             {

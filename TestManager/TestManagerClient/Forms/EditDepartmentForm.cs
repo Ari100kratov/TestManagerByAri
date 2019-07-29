@@ -11,39 +11,30 @@ using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.Forms
 {
-    public partial class AddDepartmentForm : Form
+    public partial class EditDepartmentForm : Form
     {
-        private MainForm MainForm = null;
-        private Department Department = null;
-
-        public AddDepartmentForm(MainForm mainForm, Department department = null)
+        private Department Department = new Department();
+        public EditDepartmentForm(Department department)
         {
             InitializeComponent();
-            this.MainForm = mainForm;
             this.Department = department;
         }
 
-        private void AddDepartmentForm_Load(object sender, EventArgs e)
+        private void EditDepartmentForm_Load(object sender, EventArgs e)
         {
             try
             {
-                var departmentList = Program.TMWcfService.GetAllDepartments().ToList();
-
-                if (departmentList.Count() == 0)
-                {
-                    this.checkboxUpper.Checked = true;
-                    this.checkboxUpper.Enabled = false;
-                    return;
-                }
-
+                this.tbNameDepartment.Text = this.Department.NameDepartment;
                 this.cbParentDepartment.ValueMember = "Id";
                 this.cbParentDepartment.DisplayMember = "NameDepartment";
-                this.cbParentDepartment.DataSource = departmentList;
+                this.cbParentDepartment.DataSource = Program.TMWcfService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
 
-                if (this.Department != null)
-                    this.cbParentDepartment.SelectedValue = this.Department.Id;
+                if (this.Department.ParentId == 0)
+                    this.checkboxUpper.Checked = true;
                 else
-                    this.cbParentDepartment.SelectedIndex = 0;
+                    this.cbParentDepartment.SelectedValue = this.Department.ParentId;
+
+                
             }
             catch (Exception ex)
             {
@@ -63,7 +54,7 @@ namespace TestManagerClient.Forms
                 else
                 {
                     this.cbParentDepartment.Enabled = true;
-                    this.cbParentDepartment.SelectedIndex = 0;
+                    this.cbParentDepartment.SelectedIndex = this.Department.ParentId;
                 }
             }
             catch (Exception ex)
@@ -85,14 +76,10 @@ namespace TestManagerClient.Forms
 
                 var parentId = this.checkboxUpper.Checked ? 0 : (int)this.cbParentDepartment.SelectedValue;
 
-                var department = new Department
-                {
-                    NameDepartment = this.tbNameDepartment.Text,
-                    ParentId = parentId
-                };
+                this.Department.NameDepartment = this.tbNameDepartment.Text;
+                this.Department.ParentId = parentId;
 
-                department.Id = Program.TMWcfService.AddNewDepartment(department);
-                this.MainForm.AddedDepartment = department;
+                Program.TMWcfService.EditDepartment(this.Department);
             }
             catch (Exception ex)
             {

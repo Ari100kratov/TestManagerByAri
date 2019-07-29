@@ -183,7 +183,7 @@
             // colPhoneNumber
             // 
             this.colPhoneNumber.DataPropertyName = "PhoneNumber";
-            this.colPhoneNumber.HeaderText = "Phone number";
+            this.colPhoneNumber.HeaderText = "Phone Number";
             this.colPhoneNumber.Name = "colPhoneNumber";
             this.colPhoneNumber.ReadOnly = true;
             // 

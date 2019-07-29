@@ -66,6 +66,12 @@
     <Compile Include="Forms\AddWorkerForm.Designer.cs">
       <DependentUpon>AddWorkerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EditDepartmentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditDepartmentForm.Designer.cs">
+      <DependentUpon>EditDepartmentForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EditWorkerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWorkerForm.resx">
       <DependentUpon>AddWorkerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditDepartmentForm.resx">
+      <DependentUpon>EditDepartmentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditWorkerForm.resx">
       <DependentUpon>EditWorkerForm.cs</DependentUpon>

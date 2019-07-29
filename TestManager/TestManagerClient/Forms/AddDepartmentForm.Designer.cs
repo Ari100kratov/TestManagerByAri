@@ -61,9 +61,9 @@
             this.checkboxUpper.AutoSize = true;
             this.checkboxUpper.Location = new System.Drawing.Point(112, 38);
             this.checkboxUpper.Name = "checkboxUpper";
-            this.checkboxUpper.Size = new System.Drawing.Size(111, 17);
+            this.checkboxUpper.Size = new System.Drawing.Size(105, 17);
             this.checkboxUpper.TabIndex = 2;
-            this.checkboxUpper.Text = "Upper department";
+            this.checkboxUpper.Text = "Root department";
             this.checkboxUpper.UseVisualStyleBackColor = true;
             this.checkboxUpper.CheckedChanged += new System.EventHandler(this.checkboxUpper_CheckedChanged);
             // 

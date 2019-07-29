@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TMAttributes
 {
+    /// <summary>
+    /// Атрибут для уникальных идентификаторов базы данных
+    /// </summary>
     public class AutoIncrementDB : System.Attribute
     {
     }
