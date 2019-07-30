@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using TestManagerClient.WcfServiceReference;
 
 
-namespace TestManagerClient
+namespace TestManagerClient.Forms
 {
     static class Program
     {

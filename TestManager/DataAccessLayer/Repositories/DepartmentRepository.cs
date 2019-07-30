@@ -1,9 +1,6 @@
 ﻿using DataAccessLayer.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
@@ -12,34 +9,31 @@ namespace DataAccessLayer.Repositories
     /// </summary>
     internal class DepartmentRepository : BaseRepository<Department>
     {
+        private DataManager Dm => DataManager.Instance;
         /// <summary>
         /// Удаление подразделения и его дочерних обьектов
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Код подразделения</param>
         internal override void Delete(int id)
         {
-            var childDepartmentsId = DataManager.Instance.Department.GetList().Where(x => x.ParentId == id).Select(x => x.Id).ToList();
-            foreach (var departmentId in childDepartmentsId)
+            var departments = Dm.Department.GetList().FindAll(x => x.ParentId == id || x.Id == id);
+            this.DeleteWorkersFromDepartments(departments);
+
+            foreach (var dept in departments)
+                base.Delete(dept.Id);
+        }
+
+        private void DeleteWorkersFromDepartments(List<Department> departmentList)
+        {
+            var departmentListId = departmentList.Select(x => x.Id).ToList();
+            foreach (var departmentId in departmentListId)
             {
-                /*
-                var workersId = DataManager.Instance.Worker.GetList().Where(x => x.DepartmentId == departmentId).Select(x => x.Id).ToList();
-                foreach (var workerId in workersId)
+                var workerListId = Dm.Worker.GetList().FindAll(x => x.DepartmentId == departmentId).Select(x => x.Id).ToList();
+                foreach (var workerId in workerListId)
                 {
-                    DataManager.Instance.Worker.Delete(workerId);
+                    Dm.Worker.Delete(workerId);
                 }
-                */
-                DataManager.Instance.Department.Delete(departmentId);
             }
-
-            /*
-            var workerIds = DataManager.Instance.Worker.GetList().Where(x => x.DepartmentId == id).Select(x => x.Id).ToList();
-            foreach (var workerId in workerIds)
-            {
-                DataManager.Instance.Worker.Delete(workerId);
-            }
-            */   
-
-            base.Delete(id);
         }
     }
 }

@@ -11,11 +11,11 @@ using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.Forms
 {
-    public partial class EditWorkerForm : Form
+    public partial class FmEditWorker : Form
     {
         private Worker Worker = null;
 
-        public EditWorkerForm(Worker worker)
+        public FmEditWorker(Worker worker)
         {
             InitializeComponent();
             this.Worker = worker;

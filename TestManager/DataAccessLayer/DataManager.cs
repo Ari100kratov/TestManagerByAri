@@ -1,27 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Repositories;
+﻿using DataAccessLayer.Repositories;
 
 namespace DataAccessLayer
 {
+    /// <summary>
+    /// Менеджер доступа к репозиториям базы данных
+    /// </summary>
     internal sealed class DataManager
     {
+        /// <summary>
+        /// Репозиторий сотрудника
+        /// </summary>
         internal WorkerRepository Worker { get; } = new WorkerRepository();
+
+        /// <summary>
+        /// Репозиторий подразделения
+        /// </summary>
         internal DepartmentRepository Department { get; } = new DepartmentRepository();
 
-        private static DataManager _active = null;
-        private static object _syncRoot = new object();
+        /// <summary>
+        /// Строка подключения к базе данных
+        /// </summary>
+        internal static string ConnectionString { get; set; }
 
+        private static DataManager _active = null;
+        private static readonly object _syncRoot = new object();
+
+        /// <summary>
+        /// Доступ к экземпляру класса DataManager
+        /// </summary>
         public static DataManager Instance
         {
             get
             {
-                lock (_syncRoot)
-                    if (_active == null)
-                        _active = new DataManager();
+                if (_active == null)
+                {
+                    lock (_syncRoot)
+                    {
+                        if (_active == null)
+                        {
+                            _active = new DataManager();
+                        }
+                    }
+                }
                 return _active;
             }
         }

@@ -11,10 +11,10 @@ using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.Forms
 {
-    public partial class EditDepartmentForm : Form
+    public partial class FmEditDepartment : Form
     {
         private Department Department = new Department();
-        public EditDepartmentForm(Department department)
+        public FmEditDepartment(Department department)
         {
             InitializeComponent();
             this.Department = department;

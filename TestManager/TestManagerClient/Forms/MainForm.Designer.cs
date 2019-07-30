@@ -1,4 +1,4 @@
-﻿namespace TestManagerClient
+﻿namespace TestManagerClient.Forms
 {
     partial class MainForm
     {
@@ -77,7 +77,7 @@
             this.btnAddWorker.Name = "btnAddWorker";
             this.btnAddWorker.Size = new System.Drawing.Size(75, 23);
             this.btnAddWorker.TabIndex = 0;
-            this.btnAddWorker.Text = "Add";
+            this.btnAddWorker.Text = "Add...";
             this.btnAddWorker.UseVisualStyleBackColor = true;
             this.btnAddWorker.Click += new System.EventHandler(this.btnAddWorker_Click);
             // 
@@ -88,7 +88,7 @@
             this.btnEditWorker.Name = "btnEditWorker";
             this.btnEditWorker.Size = new System.Drawing.Size(75, 23);
             this.btnEditWorker.TabIndex = 0;
-            this.btnEditWorker.Text = "Edit";
+            this.btnEditWorker.Text = "Edit...";
             this.btnEditWorker.UseVisualStyleBackColor = true;
             this.btnEditWorker.Click += new System.EventHandler(this.btnEditWorker_Click);
             // 
@@ -121,7 +121,7 @@
             this.btnEditDepartment.Name = "btnEditDepartment";
             this.btnEditDepartment.Size = new System.Drawing.Size(75, 23);
             this.btnEditDepartment.TabIndex = 0;
-            this.btnEditDepartment.Text = "Edit";
+            this.btnEditDepartment.Text = "Edit...";
             this.btnEditDepartment.UseVisualStyleBackColor = true;
             this.btnEditDepartment.Click += new System.EventHandler(this.btnEditDepartment_Click);
             // 
@@ -132,7 +132,7 @@
             this.btnAddDepartment.Name = "btnAddDepartment";
             this.btnAddDepartment.Size = new System.Drawing.Size(75, 23);
             this.btnAddDepartment.TabIndex = 0;
-            this.btnAddDepartment.Text = "Add";
+            this.btnAddDepartment.Text = "Add...";
             this.btnAddDepartment.UseVisualStyleBackColor = true;
             this.btnAddDepartment.Click += new System.EventHandler(this.btnAddDepartment_Click);
             // 

@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 using TMAttributes;
 using System.Data.SqlClient;
 using System.Data;
+using System.Reflection;
 
 namespace DataAccessLayer
 {
+    /// <summary>
+    /// Базовый репозиторий для работы с базой данных
+    /// </summary>
+    /// <typeparam name="T">Сущность базы данных</typeparam>
     internal class BaseRepository<T> where T : IKeyedModel, new()
     {
         private readonly string tableName;
@@ -21,84 +26,109 @@ namespace DataAccessLayer
             this.FillList();
         }
 
+        /// <summary>
+        /// Проверка целостности базы данных
+        /// </summary>
+        /// <param name="dataTable">Таблица базы данных</param>
+        /// <param name="properties">Класс модели данных</param>
+        /// <returns></returns>
+        private bool IsIntegrityOfDatabase(DataTable dataTable, List<PropertyInfo> properties)
+        {
+            foreach (var property in properties)
+            {
+                if (!dataTable.Columns.Contains(property.Name))
+                    return false;
+            }
+
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                if (!properties.Select(x => x.Name).Contains(column.ColumnName))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Получить список сущностей
+        /// </summary>
+        /// <returns></returns>
         internal virtual List<T> GetList()
         {
             return this.listOfEntities;
         }
 
+        /// <summary>
+        /// Получить сущность
+        /// </summary>
+        /// <param name="id">Код сущности</param>
+        /// <returns></returns>
         internal virtual T GetItem(int id)
         {
-            return this.listOfEntities.First(x=>x.Id == id);
+            return this.listOfEntities.First(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Заполнение из базы данных списка сущностей 
+        /// </summary>
         private void FillList()
         {
-            var da = new SqlDataAdapter($"SELECT * FROM [{this.tableName}]", Properties.Settings.Default.ConnectionString);
-            var dt = new DataTable();
-            da.Fill(dt);
+            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this.tableName}]", DataManager.ConnectionString);
+            var dataTable = new DataTable();
+            sqlDataAdapter.Fill(dataTable);
 
-            foreach (DataRow row in dt.Rows)
+            var properties = typeof(T).GetProperties().Where(x => x.IsDefined(typeof(ColumnDB), false)).ToList();
+
+            if (!this.IsIntegrityOfDatabase(dataTable, properties))
+                throw new Exception();
+
+            foreach (DataRow row in dataTable.Rows)
             {
                 var item = new T();
-                var properties = typeof(T).GetProperties();
-
                 foreach (var property in properties)
                 {
-                    //Проверяем содержится ли в базе данных такое поле
-                    if (!dt.Columns.Contains(property.Name))
-                        continue;
-
                     var fieldName = property.Name;
                     var fieldValue = row[fieldName] == DBNull.Value ? null : row[fieldName];
                     property.SetValue(item, fieldValue);
                 }
-
                 this.listOfEntities.Add(item);
             }
         }
 
+        /// <summary>
+        /// Добавление сущности в базу данных
+        /// </summary>
+        /// <param name="item">Сущность</param>
+        /// <returns>Код сущности</returns>
         internal virtual int Add(T item)
         {
-            var insertQuery = $"INSERT INTO [{this.tableName}](";
-            var valuesQuery = $" VALUES (";
             var fieldList = new List<string>();
             var valueList = new List<object>();
 
             var type = item.GetType();
-            var properties = type.GetProperties();
+            var properties = type.GetProperties().Where(x => !x.IsDefined(typeof(AutoIncrementDB), false) && x.IsDefined(typeof(ColumnDB), false)).ToList();
 
             foreach (var property in properties)
             {
-                //Проверяем существует ли такое поле в базе данных и оно не автоинкрементно
-                if (System.Attribute.IsDefined(property, typeof(AutoIncrementDB))
-                     || !System.Attribute.IsDefined(property, typeof(ColumnDB)))
-                    continue;
-
-                //Проверяем существуют ли данные для добавления
                 var value = property.GetValue(item);
                 if (value == null)
                     continue;
 
                 fieldList.Add(property.Name);
                 valueList.Add(value);
-
-                insertQuery += $"{property.Name}, ";
-                valuesQuery += $"@{property.Name}, ";
             }
 
-            insertQuery = insertQuery.Remove(insertQuery.Length - 2, 1) + ")";
-            valuesQuery = valuesQuery.Remove(valuesQuery.Length - 2, 1) + ")";
+            var cmdText = $"INSERT INTO [{this.tableName}]({string.Join(",", fieldList)}) "
+                + $"VALUES(@{ string.Join(", @", fieldList)}) ;  SELECT SCOPE_IDENTITY();";
 
-            var finalQuery = insertQuery + valuesQuery;
             var cmd = new SqlCommand();
-            cmd.CommandText = $"{finalQuery} ; SELECT SCOPE_IDENTITY();";
+            cmd.CommandText = cmdText;
 
             for (var i = 0; i < fieldList.Count; i++)
             {
                 cmd.Parameters.AddWithValue($"@{fieldList[i]}", valueList[i]);
             }
 
-            //Получаем и сохраняем ID добавленной записи
             int lastId = Convert.ToInt32(this.SaveChanges(cmd));
             item.Id = lastId;
             this.listOfEntities.Add(item);
@@ -107,12 +137,12 @@ namespace DataAccessLayer
 
         internal virtual void Delete(int id)
         {
-            var cmd = new SqlCommand($"DELETE FROM {this.tableName} WHERE Id = @Id");
+            var cmd = new SqlCommand($"DELETE FROM [{this.tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", id);
 
             this.SaveChanges(cmd);
 
-            var foundItem = this.listOfEntities.First(x => x.Id == id);
+            var foundItem = this.listOfEntities.FirstOrDefault(x => x.Id == id);
             if (foundItem != null)
                 this.listOfEntities.Remove(foundItem);
         }
@@ -131,33 +161,25 @@ namespace DataAccessLayer
 
         internal virtual void Update(T item)
         {
-            var updateQuery = $"UPDATE [{this.tableName}] SET ";
             var fieldList = new List<string>();
             var valueList = new List<object>();
+            var updateQuery = new List<string>();
 
             var type = item.GetType();
-            var properties = type.GetProperties();
+            var properties = type.GetProperties().Where(x => !x.IsDefined(typeof(AutoIncrementDB), false) && x.IsDefined(typeof(ColumnDB), false)).ToList();
 
             foreach (var property in properties)
             {
-                //Проверяем существует ли такое поле в базе данных и оно не автоинкрементно
-                if (System.Attribute.IsDefined(property, typeof(AutoIncrementDB))
-                     || !System.Attribute.IsDefined(property, typeof(ColumnDB)))
-                    continue;
-
                 var value = property.GetValue(item) ?? DBNull.Value;
-
                 fieldList.Add(property.Name);
                 valueList.Add(value);
 
-                updateQuery += $"{property.Name} = @{property.Name}, ";
-
+                updateQuery.Add($"{property.Name} = @{property.Name}");
             }
 
-            updateQuery = updateQuery.Remove(updateQuery.Length - 2, 1);
-
+            var cmdText = $"UPDATE [{this.tableName}] SET {string.Join(",", updateQuery)} WHERE Id = @Id";
             var cmd = new SqlCommand();
-            cmd.CommandText = $"{updateQuery} WHERE Id = @Id;";
+            cmd.CommandText = cmdText;
 
             for (var i = 0; i < fieldList.Count; i++)
             {
@@ -175,10 +197,9 @@ namespace DataAccessLayer
             this.listOfEntities[index] = item;
         }
 
-
         private object SaveChanges(SqlCommand cmd)
         {
-            using (var con = new SqlConnection(Properties.Settings.Default.ConnectionString))
+            using (var con = new SqlConnection(DataManager.ConnectionString))
             {
                 cmd.Connection = con;
                 con.Open();

@@ -40,6 +40,9 @@ namespace TestManagerClient.WcfServiceReference {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PhoneNumberField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> SexField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -124,6 +127,19 @@ namespace TestManagerClient.WcfServiceReference {
                 if ((object.ReferenceEquals(this.PhoneNumberField, value) != true)) {
                     this.PhoneNumberField = value;
                     this.RaisePropertyChanged("PhoneNumber");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> Sex {
+            get {
+                return this.SexField;
+            }
+            set {
+                if ((this.SexField.Equals(value) != true)) {
+                    this.SexField = value;
+                    this.RaisePropertyChanged("Sex");
                 }
             }
         }

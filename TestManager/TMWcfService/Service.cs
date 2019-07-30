@@ -9,23 +9,19 @@ using DataAccessLayer.Entities;
 
 namespace TMWcfService
 {
+    /// <summary>
+    /// Реализация интерфейса-контракта WCF службы
+    /// </summary>
     internal class Service : IService
     {
         private DataManager Dm => DataManager.Instance;
 
-        public int AddNewDepartment(Department department)
-        {
-            try
-            {
-                return Dm.Department.Add(department);
-            }
-            catch (Exception ex)
-            {
-                throw new FaultException(ex.Message);
-            }
-        }
-
-        public int AddNewWorker(Worker worker)
+        /// <summary>
+        /// Добавление сотрудника
+        /// </summary>
+        /// <param name="worker">Сотрудник</param>
+        /// <returns>Код добавленного сотрудника</returns>
+        public int AddWorker(Worker worker)
         {
             try
             {
@@ -37,42 +33,10 @@ namespace TMWcfService
             }
         }
 
-        public void DeleteDepartment(int id)
-        {
-            try
-            {
-                Dm.Department.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                throw new FaultException(ex.Message);
-            }
-        }
-
-        public void DeleteWorker(int id)
-        {
-            try
-            {
-                Dm.Worker.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                throw new FaultException(ex.Message);
-            }
-        }
-
-        public void EditDepartment(Department department)
-        {
-            try
-            {
-                Dm.Department.Update(department);
-            }
-            catch (Exception ex)
-            {
-                throw new FaultException(ex.Message);
-            }
-        }
-
+        /// <summary>
+        /// Изменение сотрудника
+        /// </summary>
+        /// <param name="worker">Сотрудник</param>
         public void EditWorker(Worker worker)
         {
             try
@@ -85,11 +49,15 @@ namespace TMWcfService
             }
         }
 
-        public List<Department> GetAllDepartments()
+        /// <summary>
+        /// Удаление сотрудника
+        /// </summary>
+        /// <param name="id">Код сотрудника</param>
+        public void DeleteWorker(int id)
         {
             try
             {
-                return Dm.Department.GetList();
+                Dm.Worker.Delete(id);
             }
             catch (Exception ex)
             {
@@ -97,6 +65,59 @@ namespace TMWcfService
             }
         }
 
+        /// <summary>
+        /// Добавление подразделения
+        /// </summary>
+        /// <param name="department">Подразделение</param>
+        /// <returns>Код добавленного подразделения</returns>
+        public int AddDepartment(Department department)
+        {
+            try
+            {
+                return Dm.Department.Add(department);
+            }
+            catch (Exception ex)
+            {
+                throw new FaultException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Изменение подразделения
+        /// </summary>
+        /// <param name="department">Подразделение</param>
+        public void EditDepartment(Department department)
+        {
+            try
+            {
+                Dm.Department.Update(department);
+            }
+            catch (Exception ex)
+            {
+                throw new FaultException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Удаление подразделения
+        /// </summary>
+        /// <param name="id">Код подрзделения</param>
+        public void DeleteDepartment(int id)
+        {
+            try
+            {
+                Dm.Department.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                throw new FaultException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Получение всех сотрудников
+        /// </summary>
+        /// <returns>Список сотрудников</returns>
         public List<Worker> GetAllWorkers()
         {
             try
@@ -109,11 +130,16 @@ namespace TMWcfService
             }
         }
 
-        public Department GetDepartmentById(int id)
+        /// <summary>
+        /// Получение сотрудника
+        /// </summary>
+        /// <param name="id">Код сотрудника</param>
+        /// <returns>Сотрудник</returns>
+        public Worker GetWorker(int id)
         {
             try
             {
-                return Dm.Department.GetItem(id);
+                return Dm.Worker.GetItem(id);
             }
             catch (Exception ex)
             {
@@ -121,11 +147,32 @@ namespace TMWcfService
             }
         }
 
-        public Worker GetWorkerById(int id)
+        /// <summary>
+        /// Получение всех подразделений
+        /// </summary>
+        /// <returns>Список подразделений</returns>
+        public List<Department> GetAllDepartments()
         {
             try
             {
-                return Dm.Worker.GetItem(id);
+                return Dm.Department.GetList();
+            }
+            catch (Exception ex)
+            {
+                throw new FaultException(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Получение подразделения
+        /// </summary>
+        /// <param name="id">Код подразделения</param>
+        /// <returns>Подразделение</returns>
+        public Department GetDepartment(int id)
+        {
+            try
+            {
+                return Dm.Department.GetItem(id);
             }
             catch (Exception ex)
             {

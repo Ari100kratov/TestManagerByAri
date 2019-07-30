@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using TestManagerClient.Forms;
 using TestManagerClient.WcfServiceReference;
 
-namespace TestManagerClient
+namespace TestManagerClient.Forms
 {
     public partial class MainForm : Form
     {
@@ -36,7 +36,6 @@ namespace TestManagerClient
             var nameList = GetChildrens(this.tvDepartments.SelectedNode).Select(x => x.Name).ToList();
             //Добавляем в этот список Name выбранного узла
             nameList.Add(this.tvDepartments.SelectedNode.Name);
-
             return this.WorkerBindingList.Where(x => nameList.Contains(x.DepartmentId.ToString())).ToList();
 
             //Получаем последовательность дочерних узлов
@@ -173,7 +172,7 @@ namespace TestManagerClient
                 //Создаем, чтобы получить изменения по ссылке
                 var selectedDepartment = this.SelectedNode.Tag as Department;
 
-                var editDepartmentForm = new EditDepartmentForm(selectedDepartment);
+                var editDepartmentForm = new FmEditDepartment(selectedDepartment);
                 if (editDepartmentForm.ShowDialog() == DialogResult.Cancel)
                     return;
 
@@ -216,11 +215,9 @@ namespace TestManagerClient
             if (MessageBox.Show("Are you sure you want to delete the selected and all dependent departments?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
-            //Удаляем сотрудников в выбранном и дочерних подразделениях
-            foreach (var worker in this.GetListWorkerInDepartment())
-                this.WorkerBindingList.Remove(worker);
 
             Program.TMWcfService.DeleteDepartment((this.SelectedNode.Tag as Department).Id);
+            this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
             this.tvDepartments.SelectedNode.Remove();
         }
 
@@ -256,7 +253,7 @@ namespace TestManagerClient
                     return;
                 }
 
-                var editWorkerForm = new EditWorkerForm(selectedWorker);
+                var editWorkerForm = new FmEditWorker(selectedWorker);
                 if (editWorkerForm.ShowDialog() == DialogResult.Cancel)
                     return;
 

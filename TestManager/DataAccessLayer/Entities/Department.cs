@@ -21,29 +21,32 @@ namespace DataAccessLayer.Entities
         [DataMember]
         [ColumnDB]
         [AutoIncrementDB]
-        public int Id { get => id; set => this.id = value; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Наименование подразделения
         /// </summary>
         [DataMember]
         [ColumnDB]
-        public string NameDepartment { get => this.nameDepartment; set => this.nameDepartment = value; }
+        public string NameDepartment { get; set; }
 
         /// <summary>
         /// Код родительского подразделения (0 = корневой)
         /// </summary>
         [DataMember]
         [ColumnDB]
-        public int ParentId { get => this.parentId; set => this.parentId = value; }
+        public int ParentId { get; set; }
 
         /// <summary>
         /// Список сотрудников подразделения
         /// </summary>
-        public List<Worker> Workers => this.Dm.Worker.GetList().Where(x => x.DepartmentId == this.Id).ToList();
+        public List<Worker> Workers => this.Dm.Worker.GetList().FindAll(x => x.DepartmentId == this.Id);
 
-        private int id;
-        private string nameDepartment;
-        private int parentId;
+        /// <summary>
+        /// Родительское подразделение
+        /// </summary>
+        public Department ParentDepartment => this.Dm.Department.GetItem(this.ParentId);
+
+        //public List<Department> ChildDepartments => this.Dm.Department.GetList().Where(x=>x.ParentId == this.Id).SelectMany(x=>x.ParentDepartment)
     }
 }

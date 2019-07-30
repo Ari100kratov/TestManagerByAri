@@ -1,6 +1,6 @@
 ﻿namespace TestManagerClient.Forms
 {
-    partial class EditWorkerForm
+    partial class FmEditWorker
     {
         /// <summary>
         /// Required designer variable.
@@ -38,7 +38,7 @@
             this.lblFirstName = new System.Windows.Forms.Label();
             this.tbLastName = new System.Windows.Forms.TextBox();
             this.tbFirstName = new System.Windows.Forms.TextBox();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -137,17 +137,17 @@
             this.tbFirstName.Size = new System.Drawing.Size(294, 20);
             this.tbFirstName.TabIndex = 0;
             // 
-            // btnOK
+            // btnSave
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(235, 143);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 5;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnSave.Location = new System.Drawing.Point(235, 143);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 5;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
@@ -160,14 +160,14 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // EditWorkerForm
+            // FmEditWorker
             // 
-            this.AcceptButton = this.btnOK;
+            this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(403, 173);
-            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cbDepartment);
             this.Controls.Add(this.mtbPhoneNumber);
@@ -179,7 +179,7 @@
             this.Controls.Add(this.lblFirstName);
             this.Controls.Add(this.tbLastName);
             this.Controls.Add(this.tbFirstName);
-            this.Name = "EditWorkerForm";
+            this.Name = "FmEditWorker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Edit Worker";
             this.Load += new System.EventHandler(this.EditWorkerForm_Load);
@@ -200,7 +200,7 @@
         private System.Windows.Forms.Label lblFirstName;
         private System.Windows.Forms.TextBox tbLastName;
         private System.Windows.Forms.TextBox tbFirstName;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
     }
 }

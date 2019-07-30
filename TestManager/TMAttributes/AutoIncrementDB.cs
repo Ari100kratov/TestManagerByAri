@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TMAttributes
+﻿namespace TMAttributes
 {
     /// <summary>
-    /// Атрибут для уникальных идентификаторов базы данных
+    /// Атрибут для автоинкрементного поля в базе данных
     /// </summary>
     public class AutoIncrementDB : System.Attribute
     {

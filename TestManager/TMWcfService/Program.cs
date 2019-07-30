@@ -20,17 +20,14 @@ namespace TMWcfService
                     host.Open();
                     Console.WriteLine("Введите строку подключения к базе данных");
                     var userInput = Console.ReadLine();
-                    var connection = new SqlConnection();
+                    var sqlConn = new SqlConnection();
 
-                    if (userInput == "Default")
-                        connection.ConnectionString = DataAccessLayer.Properties.Settings.Default.ConnectionString;
-                    else
-                        connection.ConnectionString = userInput;
+                    //if (userInput == "Default")
+                        DataManager.ConnectionString = Properties.Settings.Default.ConnectionString;
+                   // else
+                     //   DataManager.ConnectionString = userInput;
 
-                    connection.Open();
-                    connection.Close();
-
-                    Console.WriteLine("Подключение к базе данных произошло успешно!");
+                   // Console.WriteLine("Подключение к базе данных произошло успешно!");
                     Console.WriteLine("Для остановки работы службы нажмите любую клавишу...");
                     Console.ReadKey();
 

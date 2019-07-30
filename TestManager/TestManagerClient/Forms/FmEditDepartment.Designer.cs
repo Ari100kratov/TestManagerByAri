@@ -1,6 +1,6 @@
 ﻿namespace TestManagerClient.Forms
 {
-    partial class EditDepartmentForm
+    partial class FmEditDepartment
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbParentDepartment = new System.Windows.Forms.ComboBox();
             this.checkboxUpper = new System.Windows.Forms.CheckBox();
@@ -37,17 +37,17 @@
             this.tbNameDepartment = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // btnOK
+            // btnSave
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(241, 88);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 11;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnSave.Location = new System.Drawing.Point(241, 88);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 11;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
@@ -110,21 +110,21 @@
             this.tbNameDepartment.Size = new System.Drawing.Size(285, 20);
             this.tbNameDepartment.TabIndex = 8;
             // 
-            // EditDepartmentForm
+            // FmEditDepartment
             // 
-            this.AcceptButton = this.btnOK;
+            this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(409, 122);
-            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cbParentDepartment);
             this.Controls.Add(this.checkboxUpper);
             this.Controls.Add(this.lblParentDepartment);
             this.Controls.Add(this.lblNameDepartment);
             this.Controls.Add(this.tbNameDepartment);
-            this.Name = "EditDepartmentForm";
+            this.Name = "FmEditDepartment";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Edit Department";
             this.Load += new System.EventHandler(this.EditDepartmentForm_Load);
@@ -135,7 +135,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ComboBox cbParentDepartment;
         private System.Windows.Forms.CheckBox checkboxUpper;
