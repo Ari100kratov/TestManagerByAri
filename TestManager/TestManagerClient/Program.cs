@@ -10,7 +10,6 @@ namespace TestManagerClient.Forms
 {
     static class Program
     {
-        internal static ServiceClient TMWcfService = new ServiceClient();
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>

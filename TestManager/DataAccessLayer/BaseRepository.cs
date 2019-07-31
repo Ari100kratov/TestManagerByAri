@@ -17,12 +17,12 @@ namespace DataAccessLayer
     /// <typeparam name="T">Сущность базы данных</typeparam>
     internal class BaseRepository<T> where T : IKeyedModel, new()
     {
-        private readonly string tableName;
-        private List<T> listOfEntities = new List<T>();
+        private readonly string _tableName;
+        private List<T> _listOfEntities = new List<T>();
 
         public BaseRepository()
         {
-            this.tableName = typeof(T).Name;
+            this._tableName = typeof(T).Name;
             this.FillList();
         }
 
@@ -55,7 +55,7 @@ namespace DataAccessLayer
         /// <returns></returns>
         internal virtual List<T> GetList()
         {
-            return this.listOfEntities;
+            return this._listOfEntities;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace DataAccessLayer
         /// <returns></returns>
         internal virtual T GetItem(int id)
         {
-            return this.listOfEntities.First(x => x.Id == id);
+            return this._listOfEntities.First(x => x.Id == id);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace DataAccessLayer
         /// </summary>
         private void FillList()
         {
-            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this.tableName}]", DataManager.ConnectionString);
+            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this._tableName}]", DataManager.ConnectionString);
             var dataTable = new DataTable();
             sqlDataAdapter.Fill(dataTable);
 
@@ -91,7 +91,7 @@ namespace DataAccessLayer
                     var fieldValue = row[fieldName] == DBNull.Value ? null : row[fieldName];
                     property.SetValue(item, fieldValue);
                 }
-                this.listOfEntities.Add(item);
+                this._listOfEntities.Add(item);
             }
         }
 
@@ -118,7 +118,7 @@ namespace DataAccessLayer
                 valueList.Add(value);
             }
 
-            var cmdText = $"INSERT INTO [{this.tableName}]({string.Join(",", fieldList)}) "
+            var cmdText = $"INSERT INTO [{this._tableName}]({string.Join(",", fieldList)}) "
                 + $"VALUES(@{ string.Join(", @", fieldList)}) ;  SELECT SCOPE_IDENTITY();";
 
             var cmd = new SqlCommand();
@@ -131,34 +131,46 @@ namespace DataAccessLayer
 
             int lastId = Convert.ToInt32(this.SaveChanges(cmd));
             item.Id = lastId;
-            this.listOfEntities.Add(item);
+            this._listOfEntities.Add(item);
             return lastId;
         }
 
+        /// <summary>
+        /// Удаление сущности
+        /// </summary>
+        /// <param name="id">Код сущности</param>
         internal virtual void Delete(int id)
         {
-            var cmd = new SqlCommand($"DELETE FROM [{this.tableName}] WHERE Id = @Id");
+            var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", id);
 
             this.SaveChanges(cmd);
 
-            var foundItem = this.listOfEntities.FirstOrDefault(x => x.Id == id);
+            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == id);
             if (foundItem != null)
-                this.listOfEntities.Remove(foundItem);
+                this._listOfEntities.Remove(foundItem);
         }
 
+        /// <summary>
+        /// Удаление сущности
+        /// </summary>
+        /// <param name="item">Сущность</param>
         internal virtual void Delete(T item)
         {
-            var cmd = new SqlCommand($"DELETE FROM [{this.tableName}] WHERE Id = @Id");
+            var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", item.Id);
 
             this.SaveChanges(cmd);
 
-            var foundItem = this.listOfEntities.FirstOrDefault(x => x.Id == item.Id);
+            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == item.Id);
             if (foundItem != null)
-                this.listOfEntities.Remove(foundItem);
+                this._listOfEntities.Remove(foundItem);
         }
 
+        /// <summary>
+        /// Изменение сущности
+        /// </summary>
+        /// <param name="item">Сущность</param>
         internal virtual void Update(T item)
         {
             var fieldList = new List<string>();
@@ -177,7 +189,7 @@ namespace DataAccessLayer
                 updateQuery.Add($"{property.Name} = @{property.Name}");
             }
 
-            var cmdText = $"UPDATE [{this.tableName}] SET {string.Join(",", updateQuery)} WHERE Id = @Id";
+            var cmdText = $"UPDATE [{this._tableName}] SET {string.Join(",", updateQuery)} WHERE Id = @Id";
             var cmd = new SqlCommand();
             cmd.CommandText = cmdText;
 
@@ -189,14 +201,19 @@ namespace DataAccessLayer
 
             this.SaveChanges(cmd);
 
-            var foundItem = this.listOfEntities.FirstOrDefault(x => x.Id == item.Id);
-            var index = this.listOfEntities.IndexOf(foundItem);
+            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == item.Id);
+            var index = this._listOfEntities.IndexOf(foundItem);
             if (index == -1)
                 return;
 
-            this.listOfEntities[index] = item;
+            this._listOfEntities[index] = item;
         }
 
+        /// <summary>
+        /// Сохранение результата в базу данных
+        /// </summary>
+        /// <param name="cmd">Обьект SqlCommand</param>
+        /// <returns></returns>
         private object SaveChanges(SqlCommand cmd)
         {
             using (var con = new SqlConnection(DataManager.ConnectionString))

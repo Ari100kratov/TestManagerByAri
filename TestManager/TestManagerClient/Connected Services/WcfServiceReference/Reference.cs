@@ -41,7 +41,7 @@ namespace TestManagerClient.WcfServiceReference {
         private string PhoneNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> SexField;
+        private int SexIdField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -132,14 +132,14 @@ namespace TestManagerClient.WcfServiceReference {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> Sex {
+        public int SexId {
             get {
-                return this.SexField;
+                return this.SexIdField;
             }
             set {
-                if ((this.SexField.Equals(value) != true)) {
-                    this.SexField = value;
-                    this.RaisePropertyChanged("Sex");
+                if ((this.SexIdField.Equals(value) != true)) {
+                    this.SexIdField = value;
+                    this.RaisePropertyChanged("SexId");
                 }
             }
         }
@@ -170,7 +170,7 @@ namespace TestManagerClient.WcfServiceReference {
         private string NameDepartmentField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int ParentIdField;
+        private System.Nullable<int> ParentIdField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -209,7 +209,7 @@ namespace TestManagerClient.WcfServiceReference {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int ParentId {
+        public System.Nullable<int> ParentId {
             get {
                 return this.ParentIdField;
             }
@@ -235,11 +235,11 @@ namespace TestManagerClient.WcfServiceReference {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WcfServiceReference.IService")]
     public interface IService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddNewWorker", ReplyAction="http://tempuri.org/IService/AddNewWorkerResponse")]
-        int AddNewWorker(TestManagerClient.WcfServiceReference.Worker worker);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddWorker", ReplyAction="http://tempuri.org/IService/AddWorkerResponse")]
+        int AddWorker(TestManagerClient.WcfServiceReference.Worker worker);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddNewWorker", ReplyAction="http://tempuri.org/IService/AddNewWorkerResponse")]
-        System.Threading.Tasks.Task<int> AddNewWorkerAsync(TestManagerClient.WcfServiceReference.Worker worker);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddWorker", ReplyAction="http://tempuri.org/IService/AddWorkerResponse")]
+        System.Threading.Tasks.Task<int> AddWorkerAsync(TestManagerClient.WcfServiceReference.Worker worker);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EditWorker", ReplyAction="http://tempuri.org/IService/EditWorkerResponse")]
         void EditWorker(TestManagerClient.WcfServiceReference.Worker worker);
@@ -253,11 +253,11 @@ namespace TestManagerClient.WcfServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DeleteWorker", ReplyAction="http://tempuri.org/IService/DeleteWorkerResponse")]
         System.Threading.Tasks.Task DeleteWorkerAsync(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddNewDepartment", ReplyAction="http://tempuri.org/IService/AddNewDepartmentResponse")]
-        int AddNewDepartment(TestManagerClient.WcfServiceReference.Department department);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDepartment", ReplyAction="http://tempuri.org/IService/AddDepartmentResponse")]
+        int AddDepartment(TestManagerClient.WcfServiceReference.Department department);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddNewDepartment", ReplyAction="http://tempuri.org/IService/AddNewDepartmentResponse")]
-        System.Threading.Tasks.Task<int> AddNewDepartmentAsync(TestManagerClient.WcfServiceReference.Department department);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDepartment", ReplyAction="http://tempuri.org/IService/AddDepartmentResponse")]
+        System.Threading.Tasks.Task<int> AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EditDepartment", ReplyAction="http://tempuri.org/IService/EditDepartmentResponse")]
         void EditDepartment(TestManagerClient.WcfServiceReference.Department department);
@@ -277,11 +277,11 @@ namespace TestManagerClient.WcfServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllWorkers", ReplyAction="http://tempuri.org/IService/GetAllWorkersResponse")]
         System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Worker[]> GetAllWorkersAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetWorkerById", ReplyAction="http://tempuri.org/IService/GetWorkerByIdResponse")]
-        TestManagerClient.WcfServiceReference.Worker GetWorkerById(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetWorker", ReplyAction="http://tempuri.org/IService/GetWorkerResponse")]
+        TestManagerClient.WcfServiceReference.Worker GetWorker(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetWorkerById", ReplyAction="http://tempuri.org/IService/GetWorkerByIdResponse")]
-        System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Worker> GetWorkerByIdAsync(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetWorker", ReplyAction="http://tempuri.org/IService/GetWorkerResponse")]
+        System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Worker> GetWorkerAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllDepartments", ReplyAction="http://tempuri.org/IService/GetAllDepartmentsResponse")]
         TestManagerClient.WcfServiceReference.Department[] GetAllDepartments();
@@ -289,11 +289,11 @@ namespace TestManagerClient.WcfServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllDepartments", ReplyAction="http://tempuri.org/IService/GetAllDepartmentsResponse")]
         System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department[]> GetAllDepartmentsAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetDepartmentById", ReplyAction="http://tempuri.org/IService/GetDepartmentByIdResponse")]
-        TestManagerClient.WcfServiceReference.Department GetDepartmentById(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetDepartment", ReplyAction="http://tempuri.org/IService/GetDepartmentResponse")]
+        TestManagerClient.WcfServiceReference.Department GetDepartment(int id);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetDepartmentById", ReplyAction="http://tempuri.org/IService/GetDepartmentByIdResponse")]
-        System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> GetDepartmentByIdAsync(int id);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetDepartment", ReplyAction="http://tempuri.org/IService/GetDepartmentResponse")]
+        System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> GetDepartmentAsync(int id);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -323,12 +323,12 @@ namespace TestManagerClient.WcfServiceReference {
                 base(binding, remoteAddress) {
         }
         
-        public int AddNewWorker(TestManagerClient.WcfServiceReference.Worker worker) {
-            return base.Channel.AddNewWorker(worker);
+        public int AddWorker(TestManagerClient.WcfServiceReference.Worker worker) {
+            return base.Channel.AddWorker(worker);
         }
         
-        public System.Threading.Tasks.Task<int> AddNewWorkerAsync(TestManagerClient.WcfServiceReference.Worker worker) {
-            return base.Channel.AddNewWorkerAsync(worker);
+        public System.Threading.Tasks.Task<int> AddWorkerAsync(TestManagerClient.WcfServiceReference.Worker worker) {
+            return base.Channel.AddWorkerAsync(worker);
         }
         
         public void EditWorker(TestManagerClient.WcfServiceReference.Worker worker) {
@@ -347,12 +347,12 @@ namespace TestManagerClient.WcfServiceReference {
             return base.Channel.DeleteWorkerAsync(id);
         }
         
-        public int AddNewDepartment(TestManagerClient.WcfServiceReference.Department department) {
-            return base.Channel.AddNewDepartment(department);
+        public int AddDepartment(TestManagerClient.WcfServiceReference.Department department) {
+            return base.Channel.AddDepartment(department);
         }
         
-        public System.Threading.Tasks.Task<int> AddNewDepartmentAsync(TestManagerClient.WcfServiceReference.Department department) {
-            return base.Channel.AddNewDepartmentAsync(department);
+        public System.Threading.Tasks.Task<int> AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department) {
+            return base.Channel.AddDepartmentAsync(department);
         }
         
         public void EditDepartment(TestManagerClient.WcfServiceReference.Department department) {
@@ -379,12 +379,12 @@ namespace TestManagerClient.WcfServiceReference {
             return base.Channel.GetAllWorkersAsync();
         }
         
-        public TestManagerClient.WcfServiceReference.Worker GetWorkerById(int id) {
-            return base.Channel.GetWorkerById(id);
+        public TestManagerClient.WcfServiceReference.Worker GetWorker(int id) {
+            return base.Channel.GetWorker(id);
         }
         
-        public System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Worker> GetWorkerByIdAsync(int id) {
-            return base.Channel.GetWorkerByIdAsync(id);
+        public System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Worker> GetWorkerAsync(int id) {
+            return base.Channel.GetWorkerAsync(id);
         }
         
         public TestManagerClient.WcfServiceReference.Department[] GetAllDepartments() {
@@ -395,12 +395,12 @@ namespace TestManagerClient.WcfServiceReference {
             return base.Channel.GetAllDepartmentsAsync();
         }
         
-        public TestManagerClient.WcfServiceReference.Department GetDepartmentById(int id) {
-            return base.Channel.GetDepartmentById(id);
+        public TestManagerClient.WcfServiceReference.Department GetDepartment(int id) {
+            return base.Channel.GetDepartment(id);
         }
         
-        public System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> GetDepartmentByIdAsync(int id) {
-            return base.Channel.GetDepartmentByIdAsync(id);
+        public System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> GetDepartmentAsync(int id) {
+            return base.Channel.GetDepartmentAsync(id);
         }
     }
 }

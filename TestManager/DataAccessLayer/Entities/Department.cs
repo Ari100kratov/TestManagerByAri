@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMAttributes;
 using System.Runtime.Serialization;
-
+using TMExtensions;
 
 namespace DataAccessLayer.Entities
 {
@@ -31,22 +31,40 @@ namespace DataAccessLayer.Entities
         public string NameDepartment { get; set; }
 
         /// <summary>
-        /// Код родительского подразделения (0 = корневой)
+        /// Код родительского подразделения (null - корневой)
         /// </summary>
         [DataMember]
         [ColumnDB]
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         /// <summary>
-        /// Список сотрудников подразделения
+        /// Список дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => this.Dm.Worker.GetList().FindAll(x => x.DepartmentId == this.Id);
+        public List<Department> ChildDepartments
+        {
+            get
+            {
+                var lookup = Dm.Department.GetList().ToLookup(x => x.ParentId);
+                return lookup[null].SelectRecursive(x => lookup[x.Id]).ToList();
+            }
+        }
 
         /// <summary>
-        /// Родительское подразделение
+        /// Список дочерних подразделений вместе с текущим подразделением
         /// </summary>
-        public Department ParentDepartment => this.Dm.Department.GetItem(this.ParentId);
+        public List<Department> CurrDepartmentWithChilds
+        {
+            get
+            {
+                var departments = this.ChildDepartments;
+                departments.Add(Dm.Department.GetItem(this.Id));
+                return departments;
+            }
+        }
 
-        //public List<Department> ChildDepartments => this.Dm.Department.GetList().Where(x=>x.ParentId == this.Id).SelectMany(x=>x.ParentDepartment)
+        /// <summary>
+        /// Список сотрудников из текущего и дочерних подразделений
+        /// </summary>
+        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChilds.Contains(x.Department)).ToList();
     }
 }

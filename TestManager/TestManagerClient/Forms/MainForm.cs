@@ -14,6 +14,8 @@ namespace TestManagerClient.Forms
 {
     public partial class MainForm : Form
     {
+        private TMDataManager Dm => TMDataManager.Instance;
+
         private BindingList<Worker> WorkerBindingList = new BindingList<Worker>();
         private List<Department> DepartmentList = new List<Department>();
         private TreeNode SelectedNode = null;
@@ -107,8 +109,8 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
-                this.DepartmentList = Program.TMWcfService.GetAllDepartments().ToList();
+                this.WorkerBindingList = new BindingList<Worker>(Dm.TMService.GetAllWorkers().ToList());
+                this.DepartmentList = Dm.TMService.GetAllDepartments().ToList();
                 this.FillTreeView();
             }
             catch (Exception ex)
@@ -121,10 +123,10 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                var addDepartmentForm = new AddDepartmentForm(this, this.SelectedNode.Tag as Department);
+               // var addDepartmentForm = new AddDepartmentForm(this, this.SelectedNode.Tag as Department);
 
-                if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
-                    return;
+              //  if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
+                  //  return;
 
                 //Если корневой узел
                 if (this.AddedDepartment.ParentId == 0)
@@ -216,8 +218,8 @@ namespace TestManagerClient.Forms
                 return;
 
 
-            Program.TMWcfService.DeleteDepartment((this.SelectedNode.Tag as Department).Id);
-            this.WorkerBindingList = new BindingList<Worker>(Program.TMWcfService.GetAllWorkers().ToList());
+            Dm.TMService.DeleteDepartment((this.SelectedNode.Tag as Department).Id);
+            this.WorkerBindingList = new BindingList<Worker>(Dm.TMService.GetAllWorkers().ToList());
             this.tvDepartments.SelectedNode.Remove();
         }
 
@@ -225,13 +227,13 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                if (Program.TMWcfService.GetAllDepartments().Count() == 0)
+                if (Dm.TMService.GetAllDepartments().Count() == 0)
                     return;
 
-                var addWorkerForm = new AddWorkerForm(this, this.SelectedNode.Tag as Department);
+               // var addWorkerForm = new AddWorkerForm(this, this.SelectedNode.Tag as Department);
 
-                if (addWorkerForm.ShowDialog() == DialogResult.Cancel)
-                    return;
+                //if (addWorkerForm.ShowDialog() == DialogResult.Cancel)
+                 //   return;
 
                 this.WorkerBindingList.Add(this.AddedWorker);
                 this.AddedWorker = null;
@@ -280,7 +282,7 @@ namespace TestManagerClient.Forms
                 if (MessageBox.Show("Do you really want to delete the selected record?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                     return;
 
-                Program.TMWcfService.DeleteWorker(selectedWorker.Id);
+                Dm.TMService.DeleteWorker(selectedWorker.Id);
                 this.WorkerBindingList.Remove(selectedWorker);
                 this.RefreshDgvWorkers();
             }

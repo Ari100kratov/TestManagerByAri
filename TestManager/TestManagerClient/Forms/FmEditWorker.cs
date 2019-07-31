@@ -13,6 +13,7 @@ namespace TestManagerClient.Forms
 {
     public partial class FmEditWorker : Form
     {
+        private TMDataManager Dm => TMDataManager.Instance;
         private Worker Worker = null;
 
         public FmEditWorker(Worker worker)
@@ -57,7 +58,7 @@ namespace TestManagerClient.Forms
                 this.Worker.PhoneNumber = this.mtbPhoneNumber.Text;
                 this.Worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
 
-                Program.TMWcfService.EditWorker(this.Worker);
+                Dm.TMService.EditWorker(this.Worker);
                 this.DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
@@ -72,7 +73,7 @@ namespace TestManagerClient.Forms
             {
                 this.cbDepartment.ValueMember = "Id";
                 this.cbDepartment.DisplayMember = "NameDepartment";
-                this.cbDepartment.DataSource = Program.TMWcfService.GetAllDepartments().ToList();
+                this.cbDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList();
 
                 this.tbFirstName.Text = this.Worker.FirstName;
                 this.tbLastName.Text = this.Worker.LastName;

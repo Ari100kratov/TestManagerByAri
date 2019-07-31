@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TMEnums
+{
+    /// <summary>
+    /// Перечисления для таблицы Worker
+    /// </summary>
+    public class WorkerEnums
+    {
+        /// <summary>
+        /// Пол сотрудника
+        /// </summary>
+        public enum Sex
+        {
+            /// <summary>
+            /// Мужской
+            /// </summary>
+            [Description("Мужской")]
+            Male,
+
+            /// <summary>
+            /// Женский
+            /// </summary>
+            [Description("Женский")]
+            Female
+        }
+
+        /// <summary>
+        /// Возвращает пол сотрудника на русском языке
+        /// </summary>
+        /// <param name="sex">Перечисление пола сотрудника</param>
+        /// <returns></returns>
+        public static string GetSexRUS(Sex sex)
+        {
+            var type = sex.GetType();
+            var memberInfo = type.GetMember(sex.ToString());
+
+            if(memberInfo==null && memberInfo.Length==0)
+            {
+                var attributes = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                if (attributes != null && attributes.Length > 0)
+                    return ((DescriptionAttribute)attributes[0]).Description;
+            }
+
+            return sex.ToString();
+        }
+    }
+}

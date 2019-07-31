@@ -61,7 +61,7 @@ namespace DataAccessLayer.Entities
         /// </summary>
         [DataMember]
         [ColumnDB]
-        public int Sex { get; set; }
+        public int SexId { get; set; }
 
         /// <summary>
         /// Подразделение

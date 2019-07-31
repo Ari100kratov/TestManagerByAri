@@ -13,6 +13,7 @@ namespace TestManagerClient.Forms
 {
     public partial class FmEditDepartment : Form
     {
+        private TMDataManager Dm => TMDataManager.Instance;
         private Department Department = new Department();
         public FmEditDepartment(Department department)
         {
@@ -27,7 +28,7 @@ namespace TestManagerClient.Forms
                 this.tbNameDepartment.Text = this.Department.NameDepartment;
                 this.cbParentDepartment.ValueMember = "Id";
                 this.cbParentDepartment.DisplayMember = "NameDepartment";
-                this.cbParentDepartment.DataSource = Program.TMWcfService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
+                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
 
                 if (this.Department.ParentId == 0)
                     this.checkboxUpper.Checked = true;
@@ -54,7 +55,7 @@ namespace TestManagerClient.Forms
                 else
                 {
                     this.cbParentDepartment.Enabled = true;
-                    this.cbParentDepartment.SelectedIndex = this.Department.ParentId;
+                    this.cbParentDepartment.SelectedIndex = (int)this.Department.ParentId;
                 }
             }
             catch (Exception ex)
@@ -79,7 +80,7 @@ namespace TestManagerClient.Forms
                 this.Department.NameDepartment = this.tbNameDepartment.Text;
                 this.Department.ParentId = parentId;
 
-                Program.TMWcfService.EditDepartment(this.Department);
+                Dm.TMService.EditDepartment(this.Department);
             }
             catch (Exception ex)
             {
