@@ -19,8 +19,8 @@ namespace TMWcfService
                 {
                     host.Open();
                     Console.WriteLine("Введите строку подключения к базе данных");
-                    var userInput = Console.ReadLine();
-                    var sqlConn = new SqlConnection();
+                    //var userInput = Console.ReadLine();
+                    //var sqlConn = new SqlConnection();
 
                     //if (userInput == "Default")
                         DataManager.ConnectionString = Properties.Settings.Default.ConnectionString;

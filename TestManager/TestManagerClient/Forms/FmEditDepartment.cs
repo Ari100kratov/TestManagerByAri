@@ -14,28 +14,43 @@ namespace TestManagerClient.Forms
     public partial class FmEditDepartment : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-        private Department Department = new Department();
+        private Department Department = null;
+        private bool IsAdd => this.Department.Id == 0;
+
         public FmEditDepartment(Department department)
         {
             InitializeComponent();
             this.Department = department;
         }
 
+        private bool IsValid()
+        {
+            if (string.IsNullOrWhiteSpace(this.tbNameDepartment.Text))
+            {
+                MessageBox.Show("Fill in the blank fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
         private void EditDepartmentForm_Load(object sender, EventArgs e)
         {
             try
             {
-                this.tbNameDepartment.Text = this.Department.NameDepartment;
-                this.cbParentDepartment.ValueMember = "Id";
-                this.cbParentDepartment.DisplayMember = "NameDepartment";
-                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
+                if (this.IsAdd)
+                {
+                    this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments();
+                    return;
+                }
 
-                if (this.Department.ParentId == 0)
-                    this.checkboxUpper.Checked = true;
+                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
+                this.tbNameDepartment.Text = this.Department.NameDepartment;
+
+                if (this.Department.ParentDepartment == null)
+                    this.cbIsRoot.Checked = true;
                 else
                     this.cbParentDepartment.SelectedValue = this.Department.ParentId;
-
-                
             }
             catch (Exception ex)
             {
@@ -47,7 +62,7 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                if (this.checkboxUpper.Checked)
+                if (this.cbIsRoot.Checked)
                 {
                     this.cbParentDepartment.Enabled = false;
                     this.cbParentDepartment.SelectedIndex = -1;
@@ -55,7 +70,7 @@ namespace TestManagerClient.Forms
                 else
                 {
                     this.cbParentDepartment.Enabled = true;
-                    this.cbParentDepartment.SelectedIndex = (int)this.Department.ParentId;
+                    this.cbParentDepartment.SelectedValue = this.Department.ParentId ?? 0;
                 }
             }
             catch (Exception ex)
@@ -68,19 +83,15 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(this.tbNameDepartment.Text))
+                if (!this.IsValid())
                 {
                     this.DialogResult = DialogResult.None;
-                    MessageBox.Show("Fill in the blank fields", "Attetion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                var parentId = this.checkboxUpper.Checked ? 0 : (int)this.cbParentDepartment.SelectedValue;
-
+                var parentId = (int?)this.cbParentDepartment.SelectedValue;
                 this.Department.NameDepartment = this.tbNameDepartment.Text;
                 this.Department.ParentId = parentId;
-
-                Dm.TMService.EditDepartment(this.Department);
             }
             catch (Exception ex)
             {

@@ -14,52 +14,61 @@ namespace TestManagerClient.Forms
     public partial class FmEditWorker : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-        private Worker Worker = null;
 
-        public FmEditWorker(Worker worker)
+        private bool IsAdd => this.Worker.Id == 0;
+        private Worker Worker = null;
+        private Department Department = null;
+
+        public FmEditWorker(Worker worker, Department department =null)
         {
             InitializeComponent();
             this.Worker = worker;
+        }
+
+        private bool IsValid()
+        {
+            if (string.IsNullOrWhiteSpace(this.tbFirstName.Text) || string.IsNullOrWhiteSpace(this.tbLastName.Text))
+            {
+                MessageBox.Show("Fill in the blank fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (DateTime.Now.Year - this.dtpDateOfBirth.Value.Year < 18)
+            {
+                MessageBox.Show("Date of birth is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (!this.mtbPhoneNumber.MaskFull)
+            {
+                MessageBox.Show("Phone number is incorrect", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (this.cbDepartment.SelectedItem == null)
+            {
+                MessageBox.Show("Choose department", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
             {
-                this.DialogResult = DialogResult.None;
-
-                if (string.IsNullOrWhiteSpace(this.tbFirstName.Text) || string.IsNullOrWhiteSpace(this.tbLastName.Text))
+                if (!this.IsValid())
                 {
-                    MessageBox.Show("Fill in the blank fields", "Attetion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    this.DialogResult = DialogResult.None;
                     return;
                 }
-
-                if (DateTime.Now.Year - this.dtpDateOfBirth.Value.Year < 18)
-                {
-                    MessageBox.Show("Date of birth is incorrect", "Attetion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (!this.mtbPhoneNumber.MaskFull)
-                {
-                    MessageBox.Show("Phone number is incorrect", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (this.cbDepartment.SelectedItem == null)
-                {
-                    MessageBox.Show("Choose department", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
+               
                 this.Worker.FirstName = this.tbFirstName.Text;
                 this.Worker.LastName = this.tbLastName.Text;
                 this.Worker.DateOfBirth = this.dtpDateOfBirth.Value.Date;
                 this.Worker.PhoneNumber = this.mtbPhoneNumber.Text;
                 this.Worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
-
-                Dm.TMService.EditWorker(this.Worker);
-                this.DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
@@ -71,9 +80,13 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                this.cbDepartment.ValueMember = "Id";
-                this.cbDepartment.DisplayMember = "NameDepartment";
                 this.cbDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList();
+
+                if (this.IsAdd)
+                {
+                    this.cbDepartment.SelectedValue = this.Department?.Id;
+                    return;
+                }
 
                 this.tbFirstName.Text = this.Worker.FirstName;
                 this.tbLastName.Text = this.Worker.LastName;

@@ -11,7 +11,8 @@ namespace TestManagerClient.WcfServiceReference
     public partial class Department
     {
         private TMDataManager Dm => TMDataManager.Instance;
-  
+
+        public Department ParentDepartment => Dm.TMService.GetDepartment(this.ParentId??0);
         /// <summary>
         /// Список дочерних подразделений
         /// </summary>

@@ -10,9 +10,7 @@
   </xs:element>
   <xs:element name="AddWorkerResponse">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="AddWorkerResult" type="xs:int" />
-      </xs:sequence>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="EditWorker">
@@ -48,9 +46,7 @@
   </xs:element>
   <xs:element name="AddDepartmentResponse">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="AddDepartmentResult" type="xs:int" />
-      </xs:sequence>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="EditDepartment">
