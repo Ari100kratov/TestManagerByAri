@@ -45,7 +45,7 @@ namespace DataAccessLayer.Entities
             get
             {
                 var lookup = Dm.Department.GetList().ToLookup(x => x.ParentId);
-                return lookup[null].SelectRecursive(x => lookup[x.Id]).ToList();
+                return lookup[this.Id].SelectRecursive(x => lookup[x.Id]).ToList();
             }
         }
 
@@ -65,6 +65,6 @@ namespace DataAccessLayer.Entities
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChilds.Contains(x.Department)).ToList();
+        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChilds.Select(t => t.Id).Contains(x.DepartmentId)).ToList();
     }
 }

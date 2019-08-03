@@ -30,6 +30,11 @@ namespace TestManagerClient.Forms
                 MessageBox.Show("Fill in the blank fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+            if(!this.cbIsRoot.Checked && this.cbParentDepartment.SelectedValue == null)
+            {
+                MessageBox.Show("Select parent department", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             return true;
         }
@@ -44,10 +49,10 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().Where(x => x.Id != this.Department.Id).ToList();
+                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList().FindAll(x => x.Id != this.Department.Id);
                 this.tbNameDepartment.Text = this.Department.NameDepartment;
 
-                if (this.Department.ParentDepartment == null)
+                if (this.Department.ParentId == null)
                     this.cbIsRoot.Checked = true;
                 else
                     this.cbParentDepartment.SelectedValue = this.Department.ParentId;

@@ -17,6 +17,7 @@ namespace TestManagerClient
         /// Служба WCF
         /// </summary>
         internal ServiceClient TMService { get; } = new ServiceClient();
+        
         private static TMDataManager _active = null;
         private static readonly object _syncRoot = new object();
 

@@ -21,7 +21,7 @@ namespace TestManagerClient.WcfServiceReference
             get
             {
                 var lookup = Dm.TMService.GetAllDepartments().ToLookup(x => x.ParentId);
-                return lookup[null].SelectRecursive(x => lookup[x.Id]).ToList();
+                return lookup[this.Id].SelectRecursive(x => lookup[x.Id]).ToList();
             }
         }
 
@@ -41,6 +41,6 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.TMService.GetAllWorkers().Where(x => this.CurrDepartmentWithChilds.Contains(x.Department)).ToList();
+        public List<Worker> Workers => Dm.TMService.GetAllWorkers().Where(x => this.CurrDepartmentWithChilds.Select(t=>t.Id).Contains(x.DepartmentId)).ToList();
     }
 }

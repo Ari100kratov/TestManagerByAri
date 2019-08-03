@@ -41,15 +41,17 @@ namespace TMEnums
             var type = sex.GetType();
             var memberInfo = type.GetMember(sex.ToString());
 
-            if(memberInfo==null && memberInfo.Length==0)
-            {
-                var attributes = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            //Проверяем существует ли такой элемент в перечислении
+            if (memberInfo == null || memberInfo.Length <= 0)
+                return sex.ToString();
 
-                if (attributes != null && attributes.Length > 0)
-                    return ((DescriptionAttribute)attributes[0]).Description;
-            }
+            var attributes = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            return sex.ToString();
+            //Проверяем существует ли атрибут описания
+            if (attributes == null || attributes.Length <= 0)
+                return sex.ToString();
+
+            return ((DescriptionAttribute)attributes[0]).Description;
         }
     }
 }

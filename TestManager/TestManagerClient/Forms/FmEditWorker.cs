@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestManagerClient.WcfServiceReference;
+using TMEnums;
 
 namespace TestManagerClient.Forms
 {
@@ -19,10 +20,11 @@ namespace TestManagerClient.Forms
         private Worker Worker = null;
         private Department Department = null;
 
-        public FmEditWorker(Worker worker, Department department =null)
+        public FmEditWorker(Worker worker, Department department = null)
         {
             InitializeComponent();
             this.Worker = worker;
+            this.Department = department;
         }
 
         private bool IsValid()
@@ -63,11 +65,12 @@ namespace TestManagerClient.Forms
                     this.DialogResult = DialogResult.None;
                     return;
                 }
-               
+
                 this.Worker.FirstName = this.tbFirstName.Text;
                 this.Worker.LastName = this.tbLastName.Text;
                 this.Worker.DateOfBirth = this.dtpDateOfBirth.Value.Date;
                 this.Worker.PhoneNumber = this.mtbPhoneNumber.Text;
+                this.Worker.SexId = (int)this.cbSex.SelectedValue;
                 this.Worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
             }
             catch (Exception ex)
@@ -81,16 +84,22 @@ namespace TestManagerClient.Forms
             try
             {
                 this.cbDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList();
+                this.FillCbSex();
 
                 if (this.IsAdd)
                 {
-                    this.cbDepartment.SelectedValue = this.Department?.Id;
+                    if (this.Department != null)
+                    {
+                        this.cbDepartment.SelectedValue = this.Department.Id;
+                    }
+
                     return;
                 }
 
                 this.tbFirstName.Text = this.Worker.FirstName;
                 this.tbLastName.Text = this.Worker.LastName;
                 this.dtpDateOfBirth.Value = this.Worker.DateOfBirth;
+                this.cbSex.SelectedValue = this.Worker.Sex;
                 this.mtbPhoneNumber.Text = this.Worker.PhoneNumber;
                 this.cbDepartment.SelectedValue = this.Worker.DepartmentId;
             }
@@ -98,6 +107,19 @@ namespace TestManagerClient.Forms
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void FillCbSex()
+        {
+            this.cbSex.DataSource = Enum.GetValues(typeof(WorkerEnums.Sex))
+               .Cast<Enum>()
+               .Select(value => new
+               {
+                   (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), 
+                   typeof(DescriptionAttribute)) as DescriptionAttribute).Description, value
+               })
+               .OrderBy(item => item.value)
+               .ToList();
         }
     }
 }

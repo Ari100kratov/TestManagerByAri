@@ -41,6 +41,7 @@
             this.colLastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAge = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPhoneNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvWorkers)).BeginInit();
             this.SuspendLayout();
@@ -50,9 +51,10 @@
             this.tvDepartments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tvDepartments.HideSelection = false;
-            this.tvDepartments.Location = new System.Drawing.Point(12, 12);
+            this.tvDepartments.Location = new System.Drawing.Point(16, 15);
+            this.tvDepartments.Margin = new System.Windows.Forms.Padding(4);
             this.tvDepartments.Name = "tvDepartments";
-            this.tvDepartments.Size = new System.Drawing.Size(237, 305);
+            this.tvDepartments.Size = new System.Drawing.Size(315, 374);
             this.tvDepartments.TabIndex = 0;
             this.tvDepartments.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvDepartments_AfterSelect);
             // 
@@ -65,17 +67,19 @@
             this.panel.Controls.Add(this.btnEditDepartment);
             this.panel.Controls.Add(this.btnAddDepartment);
             this.panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel.Location = new System.Drawing.Point(0, 323);
+            this.panel.Location = new System.Drawing.Point(0, 398);
+            this.panel.Margin = new System.Windows.Forms.Padding(4);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(787, 49);
+            this.panel.Size = new System.Drawing.Size(1110, 60);
             this.panel.TabIndex = 1;
             // 
             // btnAddWorker
             // 
             this.btnAddWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddWorker.Location = new System.Drawing.Point(538, 14);
+            this.btnAddWorker.Location = new System.Drawing.Point(778, 17);
+            this.btnAddWorker.Margin = new System.Windows.Forms.Padding(4);
             this.btnAddWorker.Name = "btnAddWorker";
-            this.btnAddWorker.Size = new System.Drawing.Size(75, 23);
+            this.btnAddWorker.Size = new System.Drawing.Size(100, 28);
             this.btnAddWorker.TabIndex = 0;
             this.btnAddWorker.Text = "Add...";
             this.btnAddWorker.UseVisualStyleBackColor = true;
@@ -84,9 +88,10 @@
             // btnEditWorker
             // 
             this.btnEditWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEditWorker.Location = new System.Drawing.Point(619, 14);
+            this.btnEditWorker.Location = new System.Drawing.Point(886, 17);
+            this.btnEditWorker.Margin = new System.Windows.Forms.Padding(4);
             this.btnEditWorker.Name = "btnEditWorker";
-            this.btnEditWorker.Size = new System.Drawing.Size(75, 23);
+            this.btnEditWorker.Size = new System.Drawing.Size(100, 28);
             this.btnEditWorker.TabIndex = 0;
             this.btnEditWorker.Text = "Edit...";
             this.btnEditWorker.UseVisualStyleBackColor = true;
@@ -95,9 +100,10 @@
             // btnDeleteWorker
             // 
             this.btnDeleteWorker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDeleteWorker.Location = new System.Drawing.Point(700, 14);
+            this.btnDeleteWorker.Location = new System.Drawing.Point(994, 17);
+            this.btnDeleteWorker.Margin = new System.Windows.Forms.Padding(4);
             this.btnDeleteWorker.Name = "btnDeleteWorker";
-            this.btnDeleteWorker.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteWorker.Size = new System.Drawing.Size(100, 28);
             this.btnDeleteWorker.TabIndex = 0;
             this.btnDeleteWorker.Text = "Delete";
             this.btnDeleteWorker.UseVisualStyleBackColor = true;
@@ -106,9 +112,10 @@
             // btnDeleteDepartment
             // 
             this.btnDeleteDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDeleteDepartment.Location = new System.Drawing.Point(174, 14);
+            this.btnDeleteDepartment.Location = new System.Drawing.Point(232, 17);
+            this.btnDeleteDepartment.Margin = new System.Windows.Forms.Padding(4);
             this.btnDeleteDepartment.Name = "btnDeleteDepartment";
-            this.btnDeleteDepartment.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteDepartment.Size = new System.Drawing.Size(100, 28);
             this.btnDeleteDepartment.TabIndex = 0;
             this.btnDeleteDepartment.Text = "Delete";
             this.btnDeleteDepartment.UseVisualStyleBackColor = true;
@@ -117,9 +124,10 @@
             // btnEditDepartment
             // 
             this.btnEditDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEditDepartment.Location = new System.Drawing.Point(93, 14);
+            this.btnEditDepartment.Location = new System.Drawing.Point(124, 17);
+            this.btnEditDepartment.Margin = new System.Windows.Forms.Padding(4);
             this.btnEditDepartment.Name = "btnEditDepartment";
-            this.btnEditDepartment.Size = new System.Drawing.Size(75, 23);
+            this.btnEditDepartment.Size = new System.Drawing.Size(100, 28);
             this.btnEditDepartment.TabIndex = 0;
             this.btnEditDepartment.Text = "Edit...";
             this.btnEditDepartment.UseVisualStyleBackColor = true;
@@ -128,9 +136,10 @@
             // btnAddDepartment
             // 
             this.btnAddDepartment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddDepartment.Location = new System.Drawing.Point(12, 14);
+            this.btnAddDepartment.Location = new System.Drawing.Point(16, 17);
+            this.btnAddDepartment.Margin = new System.Windows.Forms.Padding(4);
             this.btnAddDepartment.Name = "btnAddDepartment";
-            this.btnAddDepartment.Size = new System.Drawing.Size(75, 23);
+            this.btnAddDepartment.Size = new System.Drawing.Size(100, 28);
             this.btnAddDepartment.TabIndex = 0;
             this.btnAddDepartment.Text = "Add...";
             this.btnAddDepartment.UseVisualStyleBackColor = true;
@@ -150,19 +159,23 @@
             this.colFirstName,
             this.colLastName,
             this.colAge,
-            this.colPhoneNumber});
-            this.dgvWorkers.Location = new System.Drawing.Point(255, 12);
+            this.colPhoneNumber,
+            this.sexColumn});
+            this.dgvWorkers.Location = new System.Drawing.Point(340, 15);
+            this.dgvWorkers.Margin = new System.Windows.Forms.Padding(4);
             this.dgvWorkers.MultiSelect = false;
             this.dgvWorkers.Name = "dgvWorkers";
             this.dgvWorkers.ReadOnly = true;
+            this.dgvWorkers.RowHeadersWidth = 51;
             this.dgvWorkers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvWorkers.Size = new System.Drawing.Size(520, 305);
+            this.dgvWorkers.Size = new System.Drawing.Size(754, 375);
             this.dgvWorkers.TabIndex = 2;
             // 
             // colFirstName
             // 
             this.colFirstName.DataPropertyName = "FirstName";
             this.colFirstName.HeaderText = "First Name";
+            this.colFirstName.MinimumWidth = 6;
             this.colFirstName.Name = "colFirstName";
             this.colFirstName.ReadOnly = true;
             // 
@@ -170,6 +183,7 @@
             // 
             this.colLastName.DataPropertyName = "LastName";
             this.colLastName.HeaderText = "Last Name";
+            this.colLastName.MinimumWidth = 6;
             this.colLastName.Name = "colLastName";
             this.colLastName.ReadOnly = true;
             // 
@@ -177,6 +191,7 @@
             // 
             this.colAge.DataPropertyName = "Age";
             this.colAge.HeaderText = "Age";
+            this.colAge.MinimumWidth = 6;
             this.colAge.Name = "colAge";
             this.colAge.ReadOnly = true;
             // 
@@ -184,17 +199,27 @@
             // 
             this.colPhoneNumber.DataPropertyName = "PhoneNumber";
             this.colPhoneNumber.HeaderText = "Phone Number";
+            this.colPhoneNumber.MinimumWidth = 6;
             this.colPhoneNumber.Name = "colPhoneNumber";
             this.colPhoneNumber.ReadOnly = true;
             // 
+            // sexColumn
+            // 
+            this.sexColumn.DataPropertyName = "SexRUS";
+            this.sexColumn.HeaderText = "Sex";
+            this.sexColumn.MinimumWidth = 6;
+            this.sexColumn.Name = "sexColumn";
+            this.sexColumn.ReadOnly = true;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 372);
+            this.ClientSize = new System.Drawing.Size(1110, 458);
             this.Controls.Add(this.dgvWorkers);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.tvDepartments);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Manager";
@@ -220,6 +245,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colLastName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAge;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPhoneNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sexColumn;
     }
 }
 
