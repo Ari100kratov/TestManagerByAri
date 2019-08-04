@@ -1,5 +1,4 @@
 ﻿using DataAccessLayer.Entities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DataAccessLayer.Repositories
@@ -7,7 +6,7 @@ namespace DataAccessLayer.Repositories
     /// <summary>
     /// Репозиторий подразделение
     /// </summary>
-    internal class DepartmentRepository : BaseRepository<Department>
+    internal class DepartmentRepository : CacheBaseRepository<Department>
     {
         private DataManager Dm => DataManager.Instance;
 
@@ -24,12 +23,26 @@ namespace DataAccessLayer.Repositories
                 Dm.Worker.Delete(worker.Id);
             }
 
-            foreach (var childDepartment in department.ChildDepartments)
+            RecursiveDelete(department);
+        }
+
+        /// <summary>
+        /// Удаление переданного подразделение и его дочерних объектов без нарушения целостности базы данных
+        /// </summary>
+        /// <param name="parent">Удаляемое подразделение</param>
+        private void RecursiveDelete(Department parent)
+        {
+            if (parent.Children.Count() != 0)
             {
-                base.Delete(childDepartment.Id);
+                var children = Dm.Department.GetList().FindAll(x => x.ParentId == parent.Id);
+
+                foreach (var child in children)
+                {
+                    RecursiveDelete(child);
+                }
             }
 
-            base.Delete(id);
+            base.Delete(parent);
         }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestManagerClient.WcfServiceReference;
 using TMEnums;
@@ -15,8 +11,8 @@ namespace TestManagerClient.Forms
     public partial class FmEditWorker : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-
         private bool IsAdd => this.Worker.Id == 0;
+
         private Worker Worker = null;
         private Department Department = null;
 
@@ -27,6 +23,10 @@ namespace TestManagerClient.Forms
             this.Department = department;
         }
 
+        /// <summary>
+        /// Проверка корректности полей сотрудника
+        /// </summary>
+        /// <returns></returns>
         private bool IsValid()
         {
             if (string.IsNullOrWhiteSpace(this.tbFirstName.Text) || string.IsNullOrWhiteSpace(this.tbLastName.Text))
@@ -109,6 +109,9 @@ namespace TestManagerClient.Forms
             }
         }
 
+        /// <summary>
+        /// Заполнение comboBox перечислением (Description)
+        /// </summary>
         private void FillCbSex()
         {
             this.cbSex.DataSource = Enum.GetValues(typeof(WorkerEnums.Sex))

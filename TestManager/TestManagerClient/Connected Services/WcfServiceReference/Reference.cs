@@ -254,10 +254,10 @@ namespace TestManagerClient.WcfServiceReference {
         System.Threading.Tasks.Task DeleteWorkerAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDepartment", ReplyAction="http://tempuri.org/IService/AddDepartmentResponse")]
-        void AddDepartment(TestManagerClient.WcfServiceReference.Department department);
+        TestManagerClient.WcfServiceReference.Department AddDepartment(TestManagerClient.WcfServiceReference.Department department);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDepartment", ReplyAction="http://tempuri.org/IService/AddDepartmentResponse")]
-        System.Threading.Tasks.Task AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department);
+        System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EditDepartment", ReplyAction="http://tempuri.org/IService/EditDepartmentResponse")]
         void EditDepartment(TestManagerClient.WcfServiceReference.Department department);
@@ -347,11 +347,11 @@ namespace TestManagerClient.WcfServiceReference {
             return base.Channel.DeleteWorkerAsync(id);
         }
         
-        public void AddDepartment(TestManagerClient.WcfServiceReference.Department department) {
-            base.Channel.AddDepartment(department);
+        public TestManagerClient.WcfServiceReference.Department AddDepartment(TestManagerClient.WcfServiceReference.Department department) {
+            return base.Channel.AddDepartment(department);
         }
         
-        public System.Threading.Tasks.Task AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department) {
+        public System.Threading.Tasks.Task<TestManagerClient.WcfServiceReference.Department> AddDepartmentAsync(TestManagerClient.WcfServiceReference.Department department) {
             return base.Channel.AddDepartmentAsync(department);
         }
         

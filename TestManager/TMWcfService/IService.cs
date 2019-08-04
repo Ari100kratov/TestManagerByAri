@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 using DataAccessLayer.Entities;
 
@@ -18,7 +14,6 @@ namespace TMWcfService
         /// Добавление сотрудника
         /// </summary>
         /// <param name="worker">Сотрудник</param>
-        /// <returns>Код добавленного сотрудника</returns>
         [OperationContract]
         void AddWorker(Worker worker);
 
@@ -40,9 +35,9 @@ namespace TMWcfService
         /// Добавление подразделения
         /// </summary>
         /// <param name="department">Подразделение</param>
-        /// <returns>Код добавленного подразделения</returns>
+        /// <returns>Подразделение с Id</returns>
         [OperationContract]
-        void AddDepartment(Department department);
+        Department AddDepartment(Department department);
 
         /// <summary>
         /// Изменение подразделения

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestManagerClient.WcfServiceReference;
 
@@ -14,8 +8,10 @@ namespace TestManagerClient.Forms
     public partial class FmEditDepartment : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-        private Department Department = null;
         private bool IsAdd => this.Department.Id == 0;
+
+        private Department Department = null;
+        
 
         public FmEditDepartment(Department department)
         {
@@ -23,6 +19,10 @@ namespace TestManagerClient.Forms
             this.Department = department;
         }
 
+        /// <summary>
+        /// Проверка корректности полей подразделения
+        /// </summary>
+        /// <returns></returns>
         private bool IsValid()
         {
             if (string.IsNullOrWhiteSpace(this.tbNameDepartment.Text))

@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TestManagerClient.Forms;
 using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.Forms
@@ -56,7 +50,6 @@ namespace TestManagerClient.Forms
 
                 this.FillTreeView(departmentList, node);
             }
-            //this.tvDepartments.ExpandAll();
         }
 
         /// <summary>
@@ -70,20 +63,33 @@ namespace TestManagerClient.Forms
                 this.dgvWorkers.DataSource = this.SelectedDepartment.Workers;
         }
 
-        private void UpdateTreeView(Department editedDepartment)
+        /// <summary>
+        /// Обновление дерева подразделений
+        /// </summary>
+        /// <param name="savedDepartment">Измененное подразделение</param>
+        private void UpdateTreeView(Department savedDepartment)
         {
-            var node = (TreeNode)this.tvDepartments.SelectedNode.Clone();
-            this.tvDepartments.SelectedNode.Remove();
-            node.Text = editedDepartment.NameDepartment;
-            node.Tag = editedDepartment;
+            var node = new TreeNode();
+            if(savedDepartment.Id == this.SelectedDepartment.Id)
+            {
+                node = (TreeNode)this.tvDepartments.SelectedNode.Clone();
+                this.tvDepartments.SelectedNode.Remove();
+            }
+            else
+            {
+                node.Name = savedDepartment.Id.ToString();
+            }
+           
+            node.Text = savedDepartment.NameDepartment;
+            node.Tag = savedDepartment;
 
-            if (editedDepartment.ParentId == null)
+            if (savedDepartment.ParentId == null)
             {
                 this.tvDepartments.Nodes.Add(node);
             }
             else
             {
-                var parentNode = this.tvDepartments.Nodes.Find(editedDepartment.ParentId.ToString(), true).First();
+                var parentNode = this.tvDepartments.Nodes.Find(savedDepartment.ParentId.ToString(), true).First();
                 parentNode.Nodes.Add(node);
             }
 
@@ -107,46 +113,21 @@ namespace TestManagerClient.Forms
 
         private void btnAddDepartment_Click(object sender, EventArgs e)
         {
-            /*
             try
             {
-                // var addDepartmentForm = new AddDepartmentForm(this, this.SelectedNode.Tag as Department);
+                var department = new Department();
+                var fmAddDepartment = new FmEditDepartment(department);
+                if (fmAddDepartment.ShowDialog() == DialogResult.Cancel)
+                    return;
 
-                //  if (addDepartmentForm.ShowDialog() == DialogResult.Cancel)
-                //  return;
 
-                //Если корневой узел
-                if (this.AddedDepartment.ParentId == 0)
-                {
-                    var parentNode = new TreeNode
-                    {
-                        Text = this.AddedDepartment.NameDepartment,
-                        Tag = this.AddedDepartment,
-                        Name = this.AddedDepartment.Id.ToString()
-                    };
-                    this.tvDepartments.Nodes[0].Nodes.Add(parentNode);
-                }
-                //Если дочерний узел
-                else
-                {
-                    var parentNode = this.tvDepartments.Nodes.Find(this.AddedDepartment.ParentId.ToString(), true).First();
-                    var childNode = new TreeNode
-                    {
-                        Text = this.AddedDepartment.NameDepartment,
-                        Tag = this.AddedDepartment,
-                        Name = this.AddedDepartment.Id.ToString()
-                    };
-                    parentNode.Nodes.Add(childNode);
-                    parentNode.Expand();
-                }
-
-                this.AddedDepartment = null;
+                //Сохранение в базу данных и обновление дерева подразделений
+                this.UpdateTreeView(this.Dm.TMService.AddDepartment(department));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            */
         }
 
         private void btnEditDepartment_Click(object sender, EventArgs e)
@@ -159,8 +140,8 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                var editDepartmentForm = new FmEditDepartment(this.SelectedDepartment);
-                if (editDepartmentForm.ShowDialog() == DialogResult.Cancel)
+                var fmEditDepartment = new FmEditDepartment(this.SelectedDepartment);
+                if (fmEditDepartment.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 //Сохраняем изменения в базе данных

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ServiceModel;
 using System.Data.SqlClient;
 using DataAccessLayer;
@@ -18,19 +14,16 @@ namespace TMWcfService
                 using (var host = new ServiceHost(typeof(Service)))
                 {
                     host.Open();
-                    Console.WriteLine("Введите строку подключения к базе данных");
-                    //var userInput = Console.ReadLine();
-                    //var sqlConn = new SqlConnection();
+                    Console.WriteLine("Служба WCF запущена...");
 
-                    //if (userInput == "Default")
-                        DataManager.ConnectionString = Properties.Settings.Default.ConnectionString;
-                   // else
-                     //   DataManager.ConnectionString = userInput;
+                    var conn = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                    conn.Open();
+                    conn.Close();
+                    Console.WriteLine("Подключение к базе данных произошло успешно!");
 
-                   // Console.WriteLine("Подключение к базе данных произошло успешно!");
+                    DataManager.ConnectionString = Properties.Settings.Default.ConnectionString;
                     Console.WriteLine("Для остановки работы службы нажмите любую клавишу...");
                     Console.ReadKey();
-
                 }
             }
             catch (Exception ex)

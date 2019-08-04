@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMExtensions;
 
@@ -12,11 +11,11 @@ namespace TestManagerClient.WcfServiceReference
     {
         private TMDataManager Dm => TMDataManager.Instance;
 
-        public Department ParentDepartment => Dm.TMService.GetDepartment(this.ParentId??0);
+        //public Department ParentDepartment => Dm.TMService.GetDepartment(this.ParentId??0);
         /// <summary>
         /// Список дочерних подразделений
         /// </summary>
-        public List<Department> ChildDepartments
+        public List<Department> Children
         {
             get
             {
@@ -28,19 +27,23 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Список дочерних подразделений вместе с текущим подразделением
         /// </summary>
-        public List<Department> CurrDepartmentWithChilds
+        public List<Department> CurrDepartmentWithChildren
         {
             get
             {
-                var departments = this.ChildDepartments;
-                departments.Add(Dm.TMService.GetDepartment(this.Id));
+                var departments = this.Children;
+                var currDepartment = Dm.TMService.GetDepartment(this.Id);
+                if (currDepartment != null)
+                {
+                    departments.Add(Dm.TMService.GetDepartment(this.Id));
+                }
                 return departments;
             }
         }
-        
+
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.TMService.GetAllWorkers().Where(x => this.CurrDepartmentWithChilds.Select(t=>t.Id).Contains(x.DepartmentId)).ToList();
+        public List<Worker> Workers => Dm.TMService.GetAllWorkers().Where(x => this.CurrDepartmentWithChildren.Select(t => t.Id).Contains(x.DepartmentId)).ToList();
     }
 }

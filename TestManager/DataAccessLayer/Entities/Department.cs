@@ -40,7 +40,7 @@ namespace DataAccessLayer.Entities
         /// <summary>
         /// Список дочерних подразделений
         /// </summary>
-        public List<Department> ChildDepartments
+        public List<Department> Children
         {
             get
             {
@@ -52,11 +52,11 @@ namespace DataAccessLayer.Entities
         /// <summary>
         /// Список дочерних подразделений вместе с текущим подразделением
         /// </summary>
-        public List<Department> CurrDepartmentWithChilds
+        public List<Department> CurrDepartmentWithChildren
         {
             get
             {
-                var departments = this.ChildDepartments;
+                var departments = this.Children;
                 departments.Add(Dm.Department.GetItem(this.Id));
                 return departments;
             }
@@ -65,6 +65,6 @@ namespace DataAccessLayer.Entities
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChilds.Select(t => t.Id).Contains(x.DepartmentId)).ToList();
+        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChildren.Select(w => w.Id).Contains(x.DepartmentId)).ToList();
     }
 }

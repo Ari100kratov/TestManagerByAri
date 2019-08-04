@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRepository.cs" />
+    <Compile Include="CacheBaseRepository.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\Worker.cs" />

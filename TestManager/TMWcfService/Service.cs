@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 
@@ -20,12 +17,11 @@ namespace TMWcfService
         /// Добавление сотрудника
         /// </summary>
         /// <param name="worker">Сотрудник</param>
-        /// <returns>Код добавленного сотрудника</returns>
         public void AddWorker(Worker worker)
         {
             try
             {
-                worker.Id =  Dm.Worker.Add(worker);
+                worker.Id = Dm.Worker.Add(worker);
             }
             catch (Exception ex)
             {
@@ -69,12 +65,13 @@ namespace TMWcfService
         /// Добавление подразделения
         /// </summary>
         /// <param name="department">Подразделение</param>
-        /// <returns>Код добавленного подразделения</returns>
-        public void AddDepartment(Department department)
+        /// <returns>Подразделение с Id</returns>
+        public Department AddDepartment(Department department)
         {
             try
             {
-                department.Id = Dm.Department.Add(department);
+                Dm.Department.Add(department);
+                return department;
             }
             catch (Exception ex)
             {

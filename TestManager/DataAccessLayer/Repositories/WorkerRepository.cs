@@ -5,7 +5,7 @@ namespace DataAccessLayer.Repositories
     /// <summary>
     /// Репозиторий сотрудник
     /// </summary>
-    internal class WorkerRepository : BaseRepository<Worker>
+    internal class WorkerRepository : CacheBaseRepository<Worker>
     {
         
     }

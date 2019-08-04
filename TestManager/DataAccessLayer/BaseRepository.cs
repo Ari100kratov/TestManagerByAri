@@ -2,12 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMAttributes;
 using System.Data.SqlClient;
 using System.Data;
-using System.Reflection;
 
 namespace DataAccessLayer
 {
@@ -18,81 +15,19 @@ namespace DataAccessLayer
     internal class BaseRepository<T> where T : IKeyedModel, new()
     {
         private readonly string _tableName;
-        private List<T> _listOfEntities = new List<T>();
-
+        
         public BaseRepository()
         {
             this._tableName = typeof(T).Name;
-            this.FillList();
         }
 
         /// <summary>
-        /// Проверка целостности базы данных
-        /// </summary>
-        /// <param name="dataTable">Таблица базы данных</param>
-        /// <param name="properties">Класс модели данных</param>
-        /// <returns></returns>
-        private bool IsIntegrityOfDatabase(DataTable dataTable, List<PropertyInfo> properties)
-        {
-            foreach (var property in properties)
-            {
-                if (!dataTable.Columns.Contains(property.Name))
-                    return false;
-            }
-
-            foreach (DataColumn column in dataTable.Columns)
-            {
-                if (!properties.Select(x => x.Name).Contains(column.ColumnName))
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Получить список сущностей
+        /// Возвращает наименование таблицы
         /// </summary>
         /// <returns></returns>
-        internal virtual List<T> GetList()
+        private protected string GetTableName()
         {
-            return this._listOfEntities;
-        }
-
-        /// <summary>
-        /// Получить сущность
-        /// </summary>
-        /// <param name="id">Код сущности</param>
-        /// <returns></returns>
-        internal virtual T GetItem(int id)
-        {
-            return this._listOfEntities.First(x => x.Id == id);
-        }
-
-        /// <summary>
-        /// Заполнение из базы данных списка сущностей 
-        /// </summary>
-        private void FillList()
-        {
-            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this._tableName}]", DataManager.ConnectionString);
-            var dataTable = new DataTable();
-            sqlDataAdapter.Fill(dataTable);
-
-            var properties = typeof(T).GetProperties().Where(x => x.IsDefined(typeof(ColumnDB), false)).ToList();
-
-            if (!this.IsIntegrityOfDatabase(dataTable, properties))
-                throw new Exception();
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                var item = new T();
-                foreach (var property in properties)
-                {
-                    var fieldName = property.Name;
-                    var fieldValue = row[fieldName] == DBNull.Value ? null : row[fieldName];
-                    property.SetValue(item, fieldValue);
-                }
-                this._listOfEntities.Add(item);
-            }
+            return this._tableName;
         }
 
         /// <summary>
@@ -129,10 +64,7 @@ namespace DataAccessLayer
                 cmd.Parameters.AddWithValue($"@{fieldList[i]}", valueList[i]);
             }
 
-            int lastId = Convert.ToInt32(this.SaveChanges(cmd));
-            item.Id = lastId;
-            this._listOfEntities.Add(item);
-            return lastId;
+             return Convert.ToInt32(this.SaveChanges(cmd));
         }
 
         /// <summary>
@@ -143,12 +75,7 @@ namespace DataAccessLayer
         {
             var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", id);
-
             this.SaveChanges(cmd);
-
-            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == id);
-            if (foundItem != null)
-                this._listOfEntities.Remove(foundItem);
         }
 
         /// <summary>
@@ -159,12 +86,7 @@ namespace DataAccessLayer
         {
             var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", item.Id);
-
             this.SaveChanges(cmd);
-
-            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == item.Id);
-            if (foundItem != null)
-                this._listOfEntities.Remove(foundItem);
         }
 
         /// <summary>
@@ -200,13 +122,6 @@ namespace DataAccessLayer
             cmd.Parameters.AddWithValue("@Id", item.Id);
 
             this.SaveChanges(cmd);
-
-            var foundItem = this._listOfEntities.FirstOrDefault(x => x.Id == item.Id);
-            var index = this._listOfEntities.IndexOf(foundItem);
-            if (index == -1)
-                return;
-
-            this._listOfEntities[index] = item;
         }
 
         /// <summary>
