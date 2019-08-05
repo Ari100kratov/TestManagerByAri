@@ -11,12 +11,22 @@ namespace TestManagerClient.Forms
         private bool IsAdd => this.Department.Id == 0;
 
         private Department Department = null;
-        
 
-        public FmEditDepartment(Department department)
+
+        public FmEditDepartment()
         {
             InitializeComponent();
-            this.Department = department;
+        }
+
+        internal static bool DepartmentIsChanged(Department department)
+        {
+            var fmEditDepartment = new FmEditDepartment();
+            fmEditDepartment.Department = department ?? throw new Exception("Department is null");
+
+            if (fmEditDepartment.ShowDialog() == DialogResult.Cancel)
+                return false;
+
+            return true;
         }
 
         /// <summary>
@@ -30,7 +40,7 @@ namespace TestManagerClient.Forms
                 MessageBox.Show("Fill in the blank fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            if(!this.cbIsRoot.Checked && this.cbParentDepartment.SelectedValue == null)
+            if (!this.cbIsRoot.Checked && this.cbParentDepartment.SelectedValue == null)
             {
                 MessageBox.Show("Select parent department", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;

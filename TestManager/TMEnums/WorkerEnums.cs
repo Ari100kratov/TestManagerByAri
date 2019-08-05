@@ -16,13 +16,13 @@ namespace TMEnums
             /// Мужской
             /// </summary>
             [Description("Мужской")]
-            Male,
+            Male = 0,
 
             /// <summary>
             /// Женский
             /// </summary>
             [Description("Женский")]
-            Female
+            Female = 1
         }
 
         /// <summary>

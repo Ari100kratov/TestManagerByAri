@@ -16,11 +16,27 @@ namespace TestManagerClient.Forms
         private Worker Worker = null;
         private Department Department = null;
 
-        public FmEditWorker(Worker worker, Department department = null)
+        public FmEditWorker()
         {
             InitializeComponent();
-            this.Worker = worker;
-            this.Department = department;
+        }
+
+        /// <summary>
+        /// Открывает форму изменения и добавления сотрудника
+        /// </summary>
+        /// <param name="worker">Сотрудник</param>
+        /// <param name="department">Выбранное подразделение</param>
+        /// <returns>Статус изменений</returns>
+        internal static bool WorkerIsChanged(Worker worker, Department selectedDepartment = null)
+        {
+            var fmEditWorker = new FmEditWorker();
+            fmEditWorker.Worker = worker?? throw new Exception("Worker is null");
+            fmEditWorker.Department = selectedDepartment;
+
+            if (fmEditWorker.ShowDialog() == DialogResult.Cancel)
+                return false;
+
+            return true;
         }
 
         /// <summary>
@@ -119,9 +135,8 @@ namespace TestManagerClient.Forms
                .Select(value => new
                {
                    (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), 
-                   typeof(DescriptionAttribute)) as DescriptionAttribute).Description, value
+                   typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description, value
                })
-               .OrderBy(item => item.value)
                .ToList();
         }
     }

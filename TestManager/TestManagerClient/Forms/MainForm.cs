@@ -9,10 +9,10 @@ namespace TestManagerClient.Forms
     public partial class MainForm : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-
-        private List<Worker> WorkerList = new List<Worker>();
         private Department SelectedDepartment => this.tvDepartments.SelectedNode?.Tag as Department;
         private Worker SelectedWorker => this.dgvWorkers.CurrentRow?.DataBoundItem as Worker;
+
+        private List<Worker> WorkerList = new List<Worker>();
 
         public MainForm()
         {
@@ -70,7 +70,9 @@ namespace TestManagerClient.Forms
         private void UpdateTreeView(Department savedDepartment)
         {
             var node = new TreeNode();
-            if(savedDepartment.Id == this.SelectedDepartment.Id)
+
+            //Если происходит изменение существующего узла
+            if (savedDepartment.Id == this.SelectedDepartment.Id)
             {
                 node = (TreeNode)this.tvDepartments.SelectedNode.Clone();
                 this.tvDepartments.SelectedNode.Remove();
@@ -79,7 +81,7 @@ namespace TestManagerClient.Forms
             {
                 node.Name = savedDepartment.Id.ToString();
             }
-           
+
             node.Text = savedDepartment.NameDepartment;
             node.Tag = savedDepartment;
 
@@ -116,10 +118,8 @@ namespace TestManagerClient.Forms
             try
             {
                 var department = new Department();
-                var fmAddDepartment = new FmEditDepartment(department);
-                if (fmAddDepartment.ShowDialog() == DialogResult.Cancel)
+                if (!FmEditDepartment.DepartmentIsChanged(department))
                     return;
-
 
                 //Сохранение в базу данных и обновление дерева подразделений
                 this.UpdateTreeView(this.Dm.TMService.AddDepartment(department));
@@ -140,8 +140,7 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                var fmEditDepartment = new FmEditDepartment(this.SelectedDepartment);
-                if (fmEditDepartment.ShowDialog() == DialogResult.Cancel)
+                if (!FmEditDepartment.DepartmentIsChanged(this.SelectedDepartment))
                     return;
 
                 //Сохраняем изменения в базе данных
@@ -179,8 +178,7 @@ namespace TestManagerClient.Forms
             try
             {
                 var worker = new Worker();
-                var fmAddWorker = new FmEditWorker(worker, this.SelectedDepartment);
-                if (fmAddWorker.ShowDialog(this) == DialogResult.Cancel)
+                if (!FmEditWorker.WorkerIsChanged(worker, this.SelectedDepartment))
                     return;
 
                 //Добавляем сотрудника в базу данных
@@ -206,14 +204,13 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                var editWorkerForm = new FmEditWorker(this.SelectedWorker);
-                if (editWorkerForm.ShowDialog() == DialogResult.Cancel)
+                if (!FmEditWorker.WorkerIsChanged(this.SelectedWorker))
                     return;
 
                 //Вносим изменения в базу данных
                 this.Dm.TMService.EditWorker(this.SelectedWorker);
                 //Обновляем таблицу сотрудников
-                this.dgvWorkers.Refresh();
+                this.RefreshDgvWorkers();
             }
             catch (Exception ex)
             {

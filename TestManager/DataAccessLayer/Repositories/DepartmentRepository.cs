@@ -23,14 +23,14 @@ namespace DataAccessLayer.Repositories
                 Dm.Worker.Delete(worker.Id);
             }
 
-            RecursiveDelete(department);
+            RecursiveDeleteDepartment(department);
         }
 
         /// <summary>
         /// Удаление переданного подразделение и его дочерних объектов без нарушения целостности базы данных
         /// </summary>
         /// <param name="parent">Удаляемое подразделение</param>
-        private void RecursiveDelete(Department parent)
+        private void RecursiveDeleteDepartment(Department parent)
         {
             if (parent.Children.Count() != 0)
             {
@@ -38,7 +38,7 @@ namespace DataAccessLayer.Repositories
 
                 foreach (var child in children)
                 {
-                    RecursiveDelete(child);
+                    RecursiveDeleteDepartment(child);
                 }
             }
 
