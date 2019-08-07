@@ -4,7 +4,7 @@ namespace DataAccessLayer.Interfaces
     /// <summary>
     /// Интерфейс сущности базы данных
     /// </summary>
-    interface IKeyedModel
+    public interface IKeyedModel
     {
         /// <summary>
         /// Уникальный идентификатор

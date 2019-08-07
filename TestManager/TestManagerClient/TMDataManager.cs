@@ -1,4 +1,5 @@
 ﻿using TestManagerClient.WcfServiceReference;
+using TestManagerClient.WcfRepositories;
 
 namespace TestManagerClient
 {
@@ -7,12 +8,9 @@ namespace TestManagerClient
     /// </summary>
     internal sealed class TMDataManager
     {
+        internal DepartmentRepository Department { get; } = new DepartmentRepository();
+        internal WorkerRepository Worker { get; } = new WorkerRepository();
 
-        /// <summary>
-        /// Служба WCF
-        /// </summary>
-        internal ServiceClient TMService { get; } = new ServiceClient();
-        
         private static TMDataManager _active = null;
         private static readonly object _syncRoot = new object();
 

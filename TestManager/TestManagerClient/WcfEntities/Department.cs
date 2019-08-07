@@ -19,7 +19,7 @@ namespace TestManagerClient.WcfServiceReference
         {
             get
             {
-                var lookup = Dm.TMService.GetAllDepartments().ToLookup(x => x.ParentId);
+                var lookup = Dm.Department.GetList().ToLookup(x => x.ParentId);
                 return lookup[this.Id].SelectRecursive(x => lookup[x.Id]).ToList();
             }
         }
@@ -32,10 +32,10 @@ namespace TestManagerClient.WcfServiceReference
             get
             {
                 var departments = this.Children;
-                var currDepartment = Dm.TMService.GetDepartment(this.Id);
+                var currDepartment = Dm.Department.GetDepartment(this.Id);
                 if (currDepartment != null)
                 {
-                    departments.Add(Dm.TMService.GetDepartment(this.Id));
+                    departments.Add(Dm.Department.GetDepartment(this.Id));
                 }
                 return departments;
             }
@@ -44,6 +44,6 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.TMService.GetAllWorkers().Where(x => this.CurrDepartmentWithChildren.Select(t => t.Id).Contains(x.DepartmentId)).ToList();
+        public List<Worker> Workers => Dm.Worker.GetList().FindAll(x => this.CurrDepartmentWithChildren.Select(t => t.Id).Contains(x.DepartmentId));
     }
 }

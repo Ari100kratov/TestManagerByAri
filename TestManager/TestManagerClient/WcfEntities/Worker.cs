@@ -3,7 +3,7 @@ using TMEnums;
 
 namespace TestManagerClient.WcfServiceReference
 {
-   public partial class Worker
+    public partial class Worker
     {
         private TMDataManager Dm => TMDataManager.Instance;
 
@@ -20,7 +20,7 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Подразделение сотрудника
         /// </summary>
-        public Department Department => Dm.TMService.GetDepartment(this.DepartmentId);
+        public Department Department => Dm.Department.GetDepartment(this.DepartmentId);
 
         /// <summary>
         /// Пол сотрудника

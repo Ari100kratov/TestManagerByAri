@@ -10,7 +10,9 @@
   </xs:element>
   <xs:element name="AddWorkerResponse">
     <xs:complexType>
-      <xs:sequence />
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddWorkerResult" type="xs:int" />
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="EditWorker">
@@ -47,14 +49,14 @@
   <xs:element name="AddDepartmentResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="AddDepartmentResult" nillable="true" type="q4:Department" />
+        <xs:element minOccurs="0" name="AddDepartmentResult" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="EditDepartment">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="department" nillable="true" type="q5:Department" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="department" nillable="true" type="q4:Department" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -83,7 +85,7 @@
   <xs:element name="GetAllWorkersResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetAllWorkersResult" nillable="true" type="q6:ArrayOfWorker" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetAllWorkersResult" nillable="true" type="q5:ArrayOfWorker" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -97,7 +99,7 @@
   <xs:element name="GetWorkerResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetWorkerResult" nillable="true" type="q7:Worker" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetWorkerResult" nillable="true" type="q6:Worker" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -109,7 +111,7 @@
   <xs:element name="GetAllDepartmentsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetAllDepartmentsResult" nillable="true" type="q8:ArrayOfDepartment" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetAllDepartmentsResult" nillable="true" type="q7:ArrayOfDepartment" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -123,7 +125,7 @@
   <xs:element name="GetDepartmentResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetDepartmentResult" nillable="true" type="q9:Department" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/DataAccessLayer.Entities" minOccurs="0" name="GetDepartmentResult" nillable="true" type="q8:Department" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

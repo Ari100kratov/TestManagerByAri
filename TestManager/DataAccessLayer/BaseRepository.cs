@@ -5,6 +5,7 @@ using System.Linq;
 using TMAttributes;
 using System.Data.SqlClient;
 using System.Data;
+using System.Reflection;
 
 namespace DataAccessLayer
 {
@@ -12,7 +13,7 @@ namespace DataAccessLayer
     /// Базовый репозиторий для работы с базой данных
     /// </summary>
     /// <typeparam name="T">Сущность базы данных</typeparam>
-    internal class BaseRepository<T> where T : IKeyedModel, new()
+    public class BaseRepository<T> where T : IKeyedModel, new()
     {
         private readonly string _tableName;
         
@@ -25,9 +26,60 @@ namespace DataAccessLayer
         /// Возвращает наименование таблицы
         /// </summary>
         /// <returns></returns>
-        private protected string GetTableName()
+        public string GetTableName()
         {
             return this._tableName;
+        }
+
+        /// <summary>
+        /// Проверка целостности базы данных
+        /// </summary>
+        /// <param name="dataTable">Таблица базы данных</param>
+        /// <param name="properties">Класс модели данных</param>
+        /// <returns></returns>
+        private bool IsIntegrityOfDatabase(DataTable dataTable, List<PropertyInfo> properties)
+        {
+            if (dataTable.Columns.Count != properties.Count())
+                return false;
+
+            foreach (var property in properties)
+            {
+                if (!dataTable.Columns.Contains(property.Name))
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Заполнение из базы данных списка сущностей 
+        /// </summary>
+        public virtual List<T> GetList()
+        {
+            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this.GetTableName()}]", DataManager.ConnectionString);
+            var dataTable = new DataTable();
+            sqlDataAdapter.Fill(dataTable);
+
+            var properties = typeof(T).GetProperties().Where(x => x.IsDefined(typeof(ColumnDB), false)).ToList();
+
+            if (!this.IsIntegrityOfDatabase(dataTable, properties))
+                throw new Exception();
+
+            var listEntities = new List<T>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var item = new T();
+                foreach (var property in properties)
+                {
+                    var fieldName = property.Name;
+                    var fieldValue = row[fieldName] == DBNull.Value ? null : row[fieldName];
+                    property.SetValue(item, fieldValue);
+                }
+                listEntities.Add(item);
+            }
+
+            return listEntities;
         }
 
         /// <summary>
@@ -35,7 +87,7 @@ namespace DataAccessLayer
         /// </summary>
         /// <param name="item">Сущность</param>
         /// <returns>Код сущности</returns>
-        internal virtual int Add(T item)
+        public virtual int Add(T item)
         {
             var fieldList = new List<string>();
             var valueList = new List<object>();
@@ -71,7 +123,7 @@ namespace DataAccessLayer
         /// Удаление сущности
         /// </summary>
         /// <param name="id">Код сущности</param>
-        internal virtual void Delete(int id)
+        public virtual void Delete(int id)
         {
             var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
             cmd.Parameters.AddWithValue("@Id", id);
@@ -82,18 +134,16 @@ namespace DataAccessLayer
         /// Удаление сущности
         /// </summary>
         /// <param name="item">Сущность</param>
-        internal virtual void Delete(T item)
+        public virtual void Delete(T item)
         {
-            var cmd = new SqlCommand($"DELETE FROM [{this._tableName}] WHERE Id = @Id");
-            cmd.Parameters.AddWithValue("@Id", item.Id);
-            this.SaveChanges(cmd);
+            this.Delete(item.Id);
         }
 
         /// <summary>
         /// Изменение сущности
         /// </summary>
         /// <param name="item">Сущность</param>
-        internal virtual void Update(T item)
+        public virtual void Update(T item)
         {
             var fieldList = new List<string>();
             var valueList = new List<object>();

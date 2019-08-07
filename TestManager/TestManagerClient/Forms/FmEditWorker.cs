@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -11,10 +12,10 @@ namespace TestManagerClient.Forms
     public partial class FmEditWorker : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-        private bool IsAdd => this.Worker.Id == 0;
+        private bool IsAdd => this._worker.Id == 0;
 
-        private Worker Worker = null;
-        private Department Department = null;
+        private Worker _worker = null;
+        private Department _department = null;
 
         public FmEditWorker()
         {
@@ -27,16 +28,12 @@ namespace TestManagerClient.Forms
         /// <param name="worker">Сотрудник</param>
         /// <param name="department">Выбранное подразделение</param>
         /// <returns>Статус изменений</returns>
-        internal static bool WorkerIsChanged(Worker worker, Department selectedDepartment = null)
+        internal static bool Execute(Worker worker, Department selectedDepartment = null)
         {
             var fmEditWorker = new FmEditWorker();
-            fmEditWorker.Worker = worker?? throw new Exception("Worker is null");
-            fmEditWorker.Department = selectedDepartment;
-
-            if (fmEditWorker.ShowDialog() == DialogResult.Cancel)
-                return false;
-
-            return true;
+            fmEditWorker._worker = worker?? throw new ArgumentNullException();
+            fmEditWorker._department = selectedDepartment;
+            return fmEditWorker.ShowDialog() == DialogResult.OK;
         }
 
         /// <summary>
@@ -82,12 +79,12 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                this.Worker.FirstName = this.tbFirstName.Text;
-                this.Worker.LastName = this.tbLastName.Text;
-                this.Worker.DateOfBirth = this.dtpDateOfBirth.Value.Date;
-                this.Worker.PhoneNumber = this.mtbPhoneNumber.Text;
-                this.Worker.SexId = (int)this.cbSex.SelectedValue;
-                this.Worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
+                this._worker.FirstName = this.tbFirstName.Text;
+                this._worker.LastName = this.tbLastName.Text;
+                this._worker.DateOfBirth = this.dtpDateOfBirth.Value.Date;
+                this._worker.PhoneNumber = this.mtbPhoneNumber.Text;
+                this._worker.SexId = (int)this.cbSex.SelectedValue;
+                this._worker.DepartmentId = (int)this.cbDepartment.SelectedValue;
             }
             catch (Exception ex)
             {
@@ -99,25 +96,25 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                this.cbDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList();
-                this.FillCbSex();
+                this.cbDepartment.DataSource = Dm.Department.GetList().ToList();
+                this.cbSex.DataSource = this.GetDescFromSex().ToList();
 
                 if (this.IsAdd)
                 {
-                    if (this.Department != null)
+                    if (this._department != null)
                     {
-                        this.cbDepartment.SelectedValue = this.Department.Id;
+                        this.cbDepartment.SelectedValue = this._department.Id;
                     }
 
                     return;
                 }
 
-                this.tbFirstName.Text = this.Worker.FirstName;
-                this.tbLastName.Text = this.Worker.LastName;
-                this.dtpDateOfBirth.Value = this.Worker.DateOfBirth;
-                this.cbSex.SelectedValue = this.Worker.Sex;
-                this.mtbPhoneNumber.Text = this.Worker.PhoneNumber;
-                this.cbDepartment.SelectedValue = this.Worker.DepartmentId;
+                this.tbFirstName.Text = this._worker.FirstName;
+                this.tbLastName.Text = this._worker.LastName;
+                this.dtpDateOfBirth.Value = this._worker.DateOfBirth;
+                this.cbSex.SelectedValue = this._worker.Sex;
+                this.mtbPhoneNumber.Text = this._worker.PhoneNumber;
+                this.cbDepartment.SelectedValue = this._worker.DepartmentId;
             }
             catch (Exception ex)
             {
@@ -126,18 +123,19 @@ namespace TestManagerClient.Forms
         }
 
         /// <summary>
-        /// Заполнение comboBox перечислением (Description)
+        /// Возвращает коллекцию description пола сотрудника
         /// </summary>
-        private void FillCbSex()
+        /// <returns></returns>
+        private IEnumerable<object> GetDescFromSex()
         {
-            this.cbSex.DataSource = Enum.GetValues(typeof(WorkerEnums.Sex))
+            return Enum.GetValues(typeof(WorkerEnums.Sex))
                .Cast<Enum>()
                .Select(value => new
                {
-                   (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()), 
-                   typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description, value
-               })
-               .ToList();
+                   (Attribute.GetCustomAttribute(value.GetType().GetField(value.ToString()),
+                   typeof(DescriptionAttribute)) as DescriptionAttribute)?.Description,
+                   value
+               });
         }
     }
 }

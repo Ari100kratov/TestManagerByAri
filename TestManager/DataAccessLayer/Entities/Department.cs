@@ -28,7 +28,7 @@ namespace DataAccessLayer.Entities
         /// </summary>
         [DataMember]
         [ColumnDB]
-        public string NameDepartment { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Код родительского подразделения (null - корневой)
