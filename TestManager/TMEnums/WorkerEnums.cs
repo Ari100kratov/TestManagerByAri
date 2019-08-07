@@ -3,28 +3,28 @@
 namespace TMEnums
 {
     /// <summary>
-    /// Перечисления для таблицы Worker
+    /// Пол сотрудника
     /// </summary>
-    public class WorkerEnums
+    public enum Sex
     {
         /// <summary>
-        /// Пол сотрудника
+        /// Мужской
         /// </summary>
-        public enum Sex
-        {
-            /// <summary>
-            /// Мужской
-            /// </summary>
-            [Description("Мужской")]
-            Male = 0,
+        [Description("Мужской")]
+        Male = 0,
 
-            /// <summary>
-            /// Женский
-            /// </summary>
-            [Description("Женский")]
-            Female = 1
-        }
+        /// <summary>
+        /// Женский
+        /// </summary>
+        [Description("Женский")]
+        Female = 1
+    }
 
+    /// <summary>
+    /// Локализация enum
+    /// </summary>
+    public class Localization
+    {
         /// <summary>
         /// Возвращает пол сотрудника на русском языке
         /// </summary>

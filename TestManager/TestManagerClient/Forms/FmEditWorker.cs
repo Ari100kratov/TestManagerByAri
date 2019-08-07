@@ -128,7 +128,7 @@ namespace TestManagerClient.Forms
         /// <returns></returns>
         private IEnumerable<object> GetDescFromSex()
         {
-            return Enum.GetValues(typeof(WorkerEnums.Sex))
+            return Enum.GetValues(typeof(Sex))
                .Cast<Enum>()
                .Select(value => new
                {

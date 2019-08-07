@@ -14,6 +14,7 @@ namespace TMWcfService
         /// Добавление сотрудника
         /// </summary>
         /// <param name="worker">Сотрудник</param>
+        /// <returns>Id добавленного сотрудника</returns>
         [OperationContract]
         int AddWorker(Worker worker);
 
@@ -35,7 +36,7 @@ namespace TMWcfService
         /// Добавление подразделения
         /// </summary>
         /// <param name="department">Подразделение</param>
-        /// <returns>Подразделение с Id</returns>
+        /// <returns>Id добавленного подразделения</returns>
         [OperationContract]
         int AddDepartment(Department department);
 

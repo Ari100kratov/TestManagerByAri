@@ -25,11 +25,11 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Пол сотрудника
         /// </summary>
-        public WorkerEnums.Sex Sex => (WorkerEnums.Sex)this.SexId;
+        public Sex Sex => (Sex)this.SexId;
 
         /// <summary>
         /// Пол сотрудника на русском языке
         /// </summary>
-        public string SexRUS => WorkerEnums.GetSexRUS(this.Sex);
+        public string SexRUS => Localization.GetSexRUS(this.Sex);
     }
 }
