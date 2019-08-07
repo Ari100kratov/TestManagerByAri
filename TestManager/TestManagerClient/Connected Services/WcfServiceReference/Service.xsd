@@ -15,7 +15,7 @@
   <xs:complexType name="Department">
     <xs:sequence>
       <xs:element minOccurs="0" name="Id" type="xs:int" />
-      <xs:element minOccurs="0" name="NameDepartment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ParentId" nillable="true" type="xs:int" />
     </xs:sequence>
   </xs:complexType>

@@ -8,9 +8,9 @@ namespace TestManagerClient.Forms
     public partial class FmEditDepartment : Form
     {
         private TMDataManager Dm => TMDataManager.Instance;
-        private bool IsAdd => this.Department.Id == 0;
+        private bool IsAdd => this._department.Id == 0;
 
-        private Department Department = null;
+        private Department _department = null;
 
 
         public FmEditDepartment()
@@ -18,15 +18,16 @@ namespace TestManagerClient.Forms
             InitializeComponent();
         }
 
-        internal static bool DepartmentIsChanged(Department department)
+        /// <summary>
+        /// Открывает форму изменения и добавления сотрудника
+        /// </summary>
+        /// <param name="department">Подразделение</param>
+        /// <returns>Статус изменений</returns>
+        internal static bool Execute(Department department)
         {
             var fmEditDepartment = new FmEditDepartment();
-            fmEditDepartment.Department = department ?? throw new Exception("Department is null");
-
-            if (fmEditDepartment.ShowDialog() == DialogResult.Cancel)
-                return false;
-
-            return true;
+            fmEditDepartment._department = department ?? throw new ArgumentNullException();
+            return fmEditDepartment.ShowDialog() == DialogResult.OK;
         }
 
         /// <summary>
@@ -55,17 +56,17 @@ namespace TestManagerClient.Forms
             {
                 if (this.IsAdd)
                 {
-                    this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments();
+                    this.cbParentDepartment.DataSource = Dm.Department.GetList();
                     return;
                 }
 
-                this.cbParentDepartment.DataSource = Dm.TMService.GetAllDepartments().ToList().FindAll(x => x.Id != this.Department.Id);
-                this.tbNameDepartment.Text = this.Department.NameDepartment;
+                this.cbParentDepartment.DataSource = Dm.Department.GetList().FindAll(x => x.Id != this._department.Id);
+                this.tbNameDepartment.Text = this._department.Name;
 
-                if (this.Department.ParentId == null)
+                if (this._department.ParentId == null)
                     this.cbIsRoot.Checked = true;
                 else
-                    this.cbParentDepartment.SelectedValue = this.Department.ParentId;
+                    this.cbParentDepartment.SelectedValue = this._department.ParentId;
             }
             catch (Exception ex)
             {
@@ -85,7 +86,7 @@ namespace TestManagerClient.Forms
                 else
                 {
                     this.cbParentDepartment.Enabled = true;
-                    this.cbParentDepartment.SelectedValue = this.Department.ParentId ?? 0;
+                    this.cbParentDepartment.SelectedValue = this._department.ParentId ?? 0;
                 }
             }
             catch (Exception ex)
@@ -105,8 +106,8 @@ namespace TestManagerClient.Forms
                 }
 
                 var parentId = (int?)this.cbParentDepartment.SelectedValue;
-                this.Department.NameDepartment = this.tbNameDepartment.Text;
-                this.Department.ParentId = parentId;
+                this._department.Name = this.tbNameDepartment.Text;
+                this._department.ParentId = parentId;
             }
             catch (Exception ex)
             {

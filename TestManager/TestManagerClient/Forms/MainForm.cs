@@ -12,7 +12,7 @@ namespace TestManagerClient.Forms
         private Department SelectedDepartment => this.tvDepartments.SelectedNode?.Tag as Department;
         private Worker SelectedWorker => this.dgvWorkers.CurrentRow?.DataBoundItem as Worker;
 
-        private List<Worker> WorkerList = new List<Worker>();
+        private List<Worker> _workerList = new List<Worker>();
 
         public MainForm()
         {
@@ -27,26 +27,20 @@ namespace TestManagerClient.Forms
         /// <param name="rootNode">Корневой узел дерева</param>
         private void FillTreeView(List<Department> departmentList, TreeNode rootNode = null)
         {
-            var selector = rootNode == null ? (int?)null : (rootNode.Tag as Department).Id;
-            var departments = departmentList.FindAll(x => x.ParentId == selector);
+            var treeNodeCollection = rootNode == null ? this.tvDepartments.Nodes : rootNode.Nodes;
+            var rootNodeDepartmentId = rootNode == null ? (int?)null : (rootNode.Tag as Department).Id;
+            var departments = departmentList.FindAll(x => x.ParentId == rootNodeDepartmentId);
 
             foreach (var dept in departments)
             {
                 var node = new TreeNode
                 {
-                    Text = dept.NameDepartment,
+                    Text = dept.Name,
                     Name = dept.Id.ToString(),
                     Tag = dept
                 };
 
-                if (rootNode == null)
-                {
-                    this.tvDepartments.Nodes.Add(node);
-                }
-                else
-                {
-                    rootNode.Nodes.Add(node);
-                }
+                treeNodeCollection.Add(node);
 
                 this.FillTreeView(departmentList, node);
             }
@@ -57,10 +51,8 @@ namespace TestManagerClient.Forms
         /// </summary>
         private void RefreshDgvWorkers()
         {
-            if (this.SelectedDepartment == null)
-                this.dgvWorkers.DataSource = this.WorkerList;
-            else
-                this.dgvWorkers.DataSource = this.SelectedDepartment.Workers;
+            this.dgvWorkers.DataSource = this.SelectedDepartment == null ? 
+                this._workerList : this.SelectedDepartment.Workers;
         }
 
         /// <summary>
@@ -82,7 +74,7 @@ namespace TestManagerClient.Forms
                 node.Name = savedDepartment.Id.ToString();
             }
 
-            node.Text = savedDepartment.NameDepartment;
+            node.Text = savedDepartment.Name;
             node.Tag = savedDepartment;
 
             if (savedDepartment.ParentId == null)
@@ -95,7 +87,6 @@ namespace TestManagerClient.Forms
                 parentNode.Nodes.Add(node);
             }
 
-            this.tvDepartments.ExpandAll();
             this.tvDepartments.SelectedNode = node;
         }
 
@@ -103,8 +94,8 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                this.WorkerList = Dm.TMService.GetAllWorkers().ToList();
-                this.FillTreeView(Dm.TMService.GetAllDepartments().ToList());
+                this._workerList = Dm.Worker.GetList();
+                this.FillTreeView(Dm.Department.GetList());
                 this.tvDepartments.ExpandAll();
             }
             catch (Exception ex)
@@ -118,11 +109,13 @@ namespace TestManagerClient.Forms
             try
             {
                 var department = new Department();
-                if (!FmEditDepartment.DepartmentIsChanged(department))
+                if (!FmEditDepartment.Execute(department))
                     return;
 
-                //Сохранение в базу данных и обновление дерева подразделений
-                this.UpdateTreeView(this.Dm.TMService.AddDepartment(department));
+                //Сохранение в базу данных
+                this.Dm.Department.Add(department);
+                //Обновление дерева подразделений
+                this.UpdateTreeView(department);
             }
             catch (Exception ex)
             {
@@ -140,11 +133,11 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                if (!FmEditDepartment.DepartmentIsChanged(this.SelectedDepartment))
+                if (!FmEditDepartment.Execute(this.SelectedDepartment))
                     return;
 
                 //Сохраняем изменения в базе данных
-                Dm.TMService.EditDepartment(this.SelectedDepartment);
+                Dm.Department.Edit(this.SelectedDepartment);
                 //Обновляем дерево подразделений
                 this.UpdateTreeView(this.SelectedDepartment);
             }
@@ -162,13 +155,14 @@ namespace TestManagerClient.Forms
                 return;
             }
 
-            if (MessageBox.Show("Are you sure you want to delete the selected and all dependent departments?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            var questionString = "Are you sure you want to delete the selected and all dependent departments?";
+            if (MessageBox.Show(questionString, "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             //Удаляем подразделение из базы данных
-            this.Dm.TMService.DeleteDepartment(this.SelectedDepartment.Id);
+            this.Dm.Department.Delete(this.SelectedDepartment.Id);
             //Удаляем из списка сотрудников этого подразделения
-            this.WorkerList.RemoveAll(x => this.SelectedDepartment.Workers.Contains(x));
+            this._workerList.RemoveAll(x => this.SelectedDepartment.Workers.Contains(x));
             //Удаляем узел дерева подразделения
             this.tvDepartments.SelectedNode.Remove();
         }
@@ -178,13 +172,13 @@ namespace TestManagerClient.Forms
             try
             {
                 var worker = new Worker();
-                if (!FmEditWorker.WorkerIsChanged(worker, this.SelectedDepartment))
+                if (!FmEditWorker.Execute(worker, this.SelectedDepartment))
                     return;
 
                 //Добавляем сотрудника в базу данных
-                this.Dm.TMService.AddWorker(worker);
+                this.Dm.Worker.Add(worker);
                 //Добавляем в список
-                this.WorkerList.Add(worker);
+                this._workerList.Add(worker);
                 //Обновляем таблицу сотрудников
                 this.RefreshDgvWorkers();
             }
@@ -204,11 +198,11 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                if (!FmEditWorker.WorkerIsChanged(this.SelectedWorker))
+                if (!FmEditWorker.Execute(this.SelectedWorker))
                     return;
 
                 //Вносим изменения в базу данных
-                this.Dm.TMService.EditWorker(this.SelectedWorker);
+                this.Dm.Worker.Edit(this.SelectedWorker);
                 //Обновляем таблицу сотрудников
                 this.RefreshDgvWorkers();
             }
@@ -228,13 +222,14 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                if (MessageBox.Show("Do you really want to delete the selected record?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                var questionString = "Do you really want to delete the selected record?";
+                if (MessageBox.Show(questionString, "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                     return;
 
                 //Удаляем сотрудника из базы данных
-                this.Dm.TMService.DeleteWorker(this.SelectedWorker.Id);
+                this.Dm.Worker.Delete(this.SelectedWorker.Id);
                 //Удаляем из списка
-                this.WorkerList.Remove(this.SelectedWorker);
+                this._workerList.Remove(this.SelectedWorker);
                 //Обновляем таблицу сотрудников
                 this.RefreshDgvWorkers();
             }

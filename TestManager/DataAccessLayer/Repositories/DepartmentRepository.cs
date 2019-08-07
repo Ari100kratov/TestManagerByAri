@@ -6,7 +6,7 @@ namespace DataAccessLayer.Repositories
     /// <summary>
     /// Репозиторий подразделение
     /// </summary>
-    internal class DepartmentRepository : CacheBaseRepository<Department>
+    public class DepartmentRepository : CacheBaseRepository<Department>
     {
         private DataManager Dm => DataManager.Instance;
 
@@ -14,7 +14,7 @@ namespace DataAccessLayer.Repositories
         /// Удаление подразделения и его дочерних обьектов
         /// </summary>
         /// <param name="id">Код подразделения</param>
-        internal override void Delete(int id)
+        public override void Delete(int id)
         {
             var department = Dm.Department.GetItem(id);
 
@@ -23,26 +23,19 @@ namespace DataAccessLayer.Repositories
                 Dm.Worker.Delete(worker.Id);
             }
 
-            RecursiveDeleteDepartment(department);
-        }
+            var children = this.GetList().FindAll(x => x.ParentId == department.Id);
 
-        /// <summary>
-        /// Удаление переданного подразделение и его дочерних объектов без нарушения целостности базы данных
-        /// </summary>
-        /// <param name="parent">Удаляемое подразделение</param>
-        private void RecursiveDeleteDepartment(Department parent)
-        {
-            if (parent.Children.Count() != 0)
+            foreach (var child in children)
             {
-                var children = Dm.Department.GetList().FindAll(x => x.ParentId == parent.Id);
-
-                foreach (var child in children)
-                {
-                    RecursiveDeleteDepartment(child);
-                }
+                this.Delete(child.Id);
             }
 
-            base.Delete(parent);
+            base.Delete(id);
+        }
+
+        public override void Delete(Department item)
+        {
+            this.Delete(item.Id);
         }
     }
 }

@@ -17,11 +17,11 @@ namespace TMWcfService
         /// Добавление сотрудника
         /// </summary>
         /// <param name="worker">Сотрудник</param>
-        public void AddWorker(Worker worker)
+        public int AddWorker(Worker worker)
         {
             try
             {
-                worker.Id = Dm.Worker.Add(worker);
+                return Dm.Worker.Add(worker);
             }
             catch (Exception ex)
             {
@@ -66,12 +66,11 @@ namespace TMWcfService
         /// </summary>
         /// <param name="department">Подразделение</param>
         /// <returns>Подразделение с Id</returns>
-        public Department AddDepartment(Department department)
+        public int AddDepartment(Department department)
         {
             try
             {
-                Dm.Department.Add(department);
-                return department;
+                return Dm.Department.Add(department);
             }
             catch (Exception ex)
             {

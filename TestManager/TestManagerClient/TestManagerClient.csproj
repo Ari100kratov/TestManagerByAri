@@ -77,6 +77,8 @@
     <Compile Include="TMDataManager.cs" />
     <Compile Include="WcfEntities\Department.cs" />
     <Compile Include="WcfEntities\Worker.cs" />
+    <Compile Include="WcfRepositories\DepartmentRepository.cs" />
+    <Compile Include="WcfRepositories\WorkerRepository.cs" />
     <EmbeddedResource Include="Forms\FmEditDepartment.resx">
       <DependentUpon>FmEditDepartment.cs</DependentUpon>
     </EmbeddedResource>
