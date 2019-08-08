@@ -161,8 +161,13 @@ namespace TestManagerClient.Forms
 
             //Удаляем подразделение из базы данных
             this.Dm.Department.Delete(this.SelectedDepartment.Id);
+
             //Удаляем из списка сотрудников этого подразделения
-            this._workerList.RemoveAll(x => this.SelectedDepartment.Workers.Contains(x));
+            //this._workerList.RemoveAll(x => this.SelectedDepartment.Workers.Contains(x));
+
+            //Обновление списка сотрудников
+            this._workerList = Dm.Worker.GetList();
+
             //Удаляем узел дерева подразделения
             this.tvDepartments.SelectedNode.Remove();
         }

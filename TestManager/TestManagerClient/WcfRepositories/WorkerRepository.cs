@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.WcfRepositories
@@ -64,6 +66,30 @@ namespace TestManagerClient.WcfRepositories
         public Worker GetWorker(int id)
         {
             return this._service.GetWorker(id);
+        }
+
+        public Worker FirstOrDefault(Func<Worker, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllWorkers().FirstOrDefault(filter);
+        }
+
+        public List<Worker> Where(Func<Worker, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllWorkers().Where(filter).ToList();
+        }
+
+        public Worker SingleOrDefault(Func<Worker, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllWorkers().SingleOrDefault(filter);
         }
     }
 }

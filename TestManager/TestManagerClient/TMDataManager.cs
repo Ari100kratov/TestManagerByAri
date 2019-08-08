@@ -8,7 +8,14 @@ namespace TestManagerClient
     /// </summary>
     internal sealed class TMDataManager
     {
+        /// <summary>
+        /// Репозиторий подразделения
+        /// </summary>
         internal DepartmentRepository Department { get; } = new DepartmentRepository();
+        
+        /// <summary>
+        /// Репозиторий сотрудника
+        /// </summary>
         internal WorkerRepository Worker { get; } = new WorkerRepository();
 
         private static TMDataManager _active = null;

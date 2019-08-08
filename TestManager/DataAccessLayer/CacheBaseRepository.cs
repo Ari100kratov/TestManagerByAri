@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,30 @@ namespace DataAccessLayer
         public override List<T> GetList()
         {
             return this._listOfEntities;
+        }
+
+        public virtual T FirstOrDefault(Func<T, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._listOfEntities.FirstOrDefault(filter);
+        }
+
+        public virtual List<T> Where(Func<T, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._listOfEntities.Where(filter).ToList();
+        }
+
+        public virtual T SingleOrDefault(Func<T, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._listOfEntities.SingleOrDefault(filter);
         }
 
         /// <summary>

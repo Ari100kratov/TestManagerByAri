@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entities;
+using System;
 using System.Linq;
 
 namespace DataAccessLayer.Repositories
@@ -23,7 +24,7 @@ namespace DataAccessLayer.Repositories
                 Dm.Worker.Delete(worker.Id);
             }
 
-            var children = this.GetList().FindAll(x => x.ParentId == department.Id);
+            var children = this.Where(x => x.ParentId == department.Id);
 
             foreach (var child in children)
             {
@@ -33,6 +34,10 @@ namespace DataAccessLayer.Repositories
             base.Delete(id);
         }
 
+        /// <summary>
+        /// Удаление подразделения и его дочерних обьектов
+        /// </summary>
+        /// <param name="item">Подразделение</param>
         public override void Delete(Department item)
         {
             this.Delete(item.Id);

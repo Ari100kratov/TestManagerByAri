@@ -65,6 +65,6 @@ namespace DataAccessLayer.Entities
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.Worker.GetList().Where(x => this.CurrDepartmentWithChildren.Select(w => w.Id).Contains(x.DepartmentId)).ToList();
+        public List<Worker> Workers => Dm.Worker.Where(x => this.CurrDepartmentWithChildren.Select(w => w.Id).Contains(x.DepartmentId));
     }
 }

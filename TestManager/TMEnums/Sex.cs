@@ -30,7 +30,7 @@ namespace TMEnums
         /// </summary>
         /// <param name="sex">Перечисление пола сотрудника</param>
         /// <returns></returns>
-        public static string GetSexRUS(Sex sex)
+        public static string GetSexResource(Sex sex)
         {
             var type = sex.GetType();
             var memberInfo = type.GetMember(sex.ToString());

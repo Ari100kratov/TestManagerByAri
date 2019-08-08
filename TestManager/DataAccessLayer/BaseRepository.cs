@@ -23,15 +23,6 @@ namespace DataAccessLayer
         }
 
         /// <summary>
-        /// Возвращает наименование таблицы
-        /// </summary>
-        /// <returns></returns>
-        public string GetTableName()
-        {
-            return this._tableName;
-        }
-
-        /// <summary>
         /// Проверка целостности базы данных
         /// </summary>
         /// <param name="dataTable">Таблица базы данных</param>
@@ -56,7 +47,7 @@ namespace DataAccessLayer
         /// </summary>
         public virtual List<T> GetList()
         {
-            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this.GetTableName()}]", DataManager.ConnectionString);
+            var sqlDataAdapter = new SqlDataAdapter($"SELECT * FROM [{this._tableName}]", DataManager.ConnectionString);
             var dataTable = new DataTable();
             sqlDataAdapter.Fill(dataTable);
 

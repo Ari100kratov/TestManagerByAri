@@ -25,9 +25,11 @@ namespace TestManagerClient.Forms
         /// <returns>Статус изменений</returns>
         internal static bool Execute(Department department)
         {
-            var fmEditDepartment = new FmEditDepartment();
-            fmEditDepartment._department = department ?? throw new ArgumentNullException();
-            return fmEditDepartment.ShowDialog() == DialogResult.OK;
+            using (var fmEditDepartment = new FmEditDepartment())
+            {
+                fmEditDepartment._department = department ?? throw new ArgumentNullException();
+                return fmEditDepartment.ShowDialog() == DialogResult.OK;
+            }
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace TestManagerClient.Forms
                     return;
                 }
 
-                this.cbParentDepartment.DataSource = Dm.Department.GetList().FindAll(x => x.Id != this._department.Id);
+                this.cbParentDepartment.DataSource = Dm.Department.Where(x => x.Id != this._department.Id);
                 this.tbNameDepartment.Text = this._department.Name;
 
                 if (this._department.ParentId == null)

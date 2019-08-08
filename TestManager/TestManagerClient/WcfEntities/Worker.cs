@@ -20,7 +20,7 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Подразделение сотрудника
         /// </summary>
-        public Department Department => Dm.Department.GetDepartment(this.DepartmentId);
+        public Department Department => Dm.Department.Get(this.DepartmentId);
 
         /// <summary>
         /// Пол сотрудника
@@ -30,6 +30,6 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Пол сотрудника на русском языке
         /// </summary>
-        public string SexRUS => Localization.GetSexRUS(this.Sex);
+        public string SexRUS => Localization.GetSexResource(this.Sex);
     }
 }

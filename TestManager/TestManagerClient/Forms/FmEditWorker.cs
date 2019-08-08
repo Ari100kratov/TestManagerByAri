@@ -30,10 +30,12 @@ namespace TestManagerClient.Forms
         /// <returns>Статус изменений</returns>
         internal static bool Execute(Worker worker, Department selectedDepartment = null)
         {
-            var fmEditWorker = new FmEditWorker();
-            fmEditWorker._worker = worker?? throw new ArgumentNullException();
-            fmEditWorker._department = selectedDepartment;
-            return fmEditWorker.ShowDialog() == DialogResult.OK;
+            using (var fmEditWorker = new FmEditWorker())
+            {
+                fmEditWorker._worker = worker ?? throw new ArgumentNullException();
+                fmEditWorker._department = selectedDepartment;
+                return fmEditWorker.ShowDialog() == DialogResult.OK;
+            }
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace TestManagerClient.Forms
         {
             try
             {
-                this.cbDepartment.DataSource = Dm.Department.GetList().ToList();
+                this.cbDepartment.DataSource = Dm.Department.GetList();
                 this.cbSex.DataSource = this.GetDescFromSex().ToList();
 
                 if (this.IsAdd)

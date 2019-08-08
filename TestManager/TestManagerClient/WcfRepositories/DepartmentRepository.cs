@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TestManagerClient.WcfServiceReference;
 
@@ -61,9 +62,33 @@ namespace TestManagerClient.WcfRepositories
         /// </summary>
         /// <param name="id">Код подразделения</param>
         /// <returns>Подразделение</returns>
-        public Department GetDepartment(int id)
+        public Department Get(int id)
         {
             return this._service.GetDepartment(id);
+        }
+
+        public Department FirstOrDefault(Func<Department, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllDepartments().FirstOrDefault(filter);
+        }
+
+        public List<Department> Where(Func<Department, bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllDepartments().Where(filter).ToList();
+        }
+
+        public Department SingleOrDefault(Func<Department,bool> filter)
+        {
+            if (filter == null)
+                throw new ArgumentException();
+
+            return this._service.GetAllDepartments().SingleOrDefault(filter);
         }
     }
 }

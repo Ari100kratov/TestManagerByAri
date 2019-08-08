@@ -31,10 +31,10 @@ namespace TestManagerClient.WcfServiceReference
             get
             {
                 var departments = this.Children;
-                var currDepartment = Dm.Department.GetDepartment(this.Id);
+                var currDepartment = Dm.Department.Get(this.Id);
                 if (currDepartment != null)
                 {
-                    departments.Add(Dm.Department.GetDepartment(this.Id));
+                    departments.Add(currDepartment);
                 }
                 return departments;
             }
@@ -43,6 +43,6 @@ namespace TestManagerClient.WcfServiceReference
         /// <summary>
         /// Список сотрудников из текущего и дочерних подразделений
         /// </summary>
-        public List<Worker> Workers => Dm.Worker.GetList().FindAll(x => this.CurrDepartmentWithChildren.Select(t => t.Id).Contains(x.DepartmentId));
+        public List<Worker> Workers => Dm.Worker.Where(x => this.CurrDepartmentWithChildren.Select(t => t.Id).Contains(x.DepartmentId));
     }
 }
