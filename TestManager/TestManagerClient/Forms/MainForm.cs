@@ -97,6 +97,7 @@ namespace TestManagerClient.Forms
                 this._workerList = Dm.Worker.GetList();
                 this.FillTreeView(Dm.Department.GetList());
                 this.tvDepartments.ExpandAll();
+                
             }
             catch (Exception ex)
             {

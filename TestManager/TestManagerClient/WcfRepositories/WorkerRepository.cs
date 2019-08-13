@@ -68,28 +68,28 @@ namespace TestManagerClient.WcfRepositories
             return this._service.GetWorker(id);
         }
 
-        public Worker FirstOrDefault(Func<Worker, bool> filter)
+        public Worker FirstOrDefault(Expression<Func<Worker, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllWorkers().FirstOrDefault(filter);
+            return this._service.GetAllWorkers().AsQueryable().FirstOrDefault(filter);
         }
 
-        public List<Worker> Where(Func<Worker, bool> filter)
+        public List<Worker> Where(Expression<Func<Worker, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllWorkers().Where(filter).ToList();
+            return this._service.GetAllWorkers().AsQueryable().Where(filter).ToList();
         }
 
-        public Worker SingleOrDefault(Func<Worker, bool> filter)
+        public Worker SingleOrDefault(Expression<Func<Worker, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllWorkers().SingleOrDefault(filter);
+            return this._service.GetAllWorkers().AsQueryable().SingleOrDefault(filter);
         }
     }
 }

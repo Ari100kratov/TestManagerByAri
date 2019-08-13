@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TestManagerClient.WcfServiceReference;
 
 namespace TestManagerClient.WcfRepositories
@@ -67,28 +68,28 @@ namespace TestManagerClient.WcfRepositories
             return this._service.GetDepartment(id);
         }
 
-        public Department FirstOrDefault(Func<Department, bool> filter)
+        public Department FirstOrDefault(Expression<Func<Department, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllDepartments().FirstOrDefault(filter);
+            return this._service.GetAllDepartments().AsQueryable().FirstOrDefault(filter);
         }
 
-        public List<Department> Where(Func<Department, bool> filter)
+        public List<Department> Where(Expression<Func<Department, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllDepartments().Where(filter).ToList();
+            return this._service.GetAllDepartments().AsQueryable().Where(filter).ToList();
         }
 
-        public Department SingleOrDefault(Func<Department,bool> filter)
+        public Department SingleOrDefault(Expression<Func<Department,bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._service.GetAllDepartments().SingleOrDefault(filter);
+            return this._service.GetAllDepartments().AsQueryable().SingleOrDefault(filter);
         }
     }
 }

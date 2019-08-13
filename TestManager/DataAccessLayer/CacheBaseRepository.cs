@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace DataAccessLayer
 {
@@ -32,28 +33,28 @@ namespace DataAccessLayer
             return this._listOfEntities;
         }
 
-        public virtual T FirstOrDefault(Func<T, bool> filter)
+        public virtual T FirstOrDefault(Expression<Func<T, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._listOfEntities.FirstOrDefault(filter);
+            return this._listOfEntities.AsQueryable().FirstOrDefault(filter);
         }
 
-        public virtual List<T> Where(Func<T, bool> filter)
+        public virtual List<T> Where(Expression<Func<T, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._listOfEntities.Where(filter).ToList();
+            return this._listOfEntities.AsQueryable().Where(filter).ToList();
         }
 
-        public virtual T SingleOrDefault(Func<T, bool> filter)
+        public virtual T SingleOrDefault(Expression<Func<T, bool>> filter)
         {
             if (filter == null)
                 throw new ArgumentException();
 
-            return this._listOfEntities.SingleOrDefault(filter);
+            return this._listOfEntities.AsQueryable().SingleOrDefault(filter);
         }
 
         /// <summary>
